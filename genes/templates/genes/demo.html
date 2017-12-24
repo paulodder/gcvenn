@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+{% load static %}
+
+
+<head>
+  <script> <!-- Access path here once to load tsv file in other scripts -->
+    var path = "{% static 'js/demo.tsv' %}";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+  <script type="text/javascript" src="{% static "js/demo.js" %}"></script>
+  <link type="text/css" href="{% static "css/demo.css" %}" rel="stylesheet">
+</head>
+
+<body>
+  <svg class="chart"></svg>  
+</body>
+
