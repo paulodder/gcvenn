@@ -13,9 +13,10 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+THIS_PATH = os.path.dirname(os.path.realpath(__file__))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+ROOT_PATH = os.path.abspath(os.path.join(THIS_PATH, os.pardir)) # up
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
@@ -25,7 +26,7 @@ SECRET_KEY = 'hcz-9ux67de+54^35x!t9r-m9un20db1=apm063f4(-e&&eb2m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -120,3 +121,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+
+
+SHELL_PLUS = 'ipython'
+STATICFILE_DIRS = [
+    os.path.join(ROOT_PATH, 'genes/static/'),
+    os.path.join(ROOT_PATH, 'node_modules'),
+    # os.path.join(ROOT_PATH, 'gcvenn/staticfiles')
+]
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
