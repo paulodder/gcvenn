@@ -19,10 +19,10 @@ def run(*args):
 
     
     with open(output_file, 'w') as outfile:
-        outfile.write("x_value    jan_expr    gte_expr    tcgan_exprp")
+        outfile.write("x_value\texpr_jan\texpr_gte\texpr_tcgan\n")
         for unrounded_x in np.arange(0.0, 13+interv, interv):
             x = round(unrounded_x, 2)
-            outfile.write("%s %s %s %s\n" % (x,
+            outfile.write("%s\t%s\t%s\t%s\n" % (x,
                                              jan_expr_values[x],
                                              gte_expr_values[x],
                                              tcgan_expr_values[x]))

@@ -13,7 +13,7 @@ def base(request):
     # template = loader.get_template('genes/base.html' )
     # response = HttpResponse(template.render))    
     # response['age'] = 120 
-    return render(request, 'genes/demo.html')
+    return render(request, 'genes/base.html')
 # <!-- <html> -->
 # <!--   <head> -->
 # <!--     <title>App</title> -->

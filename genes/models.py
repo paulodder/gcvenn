@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Gene(models.Model):
     """Represents a gene and its expression values"""
     univ_name = models.CharField(max_length=10, unique=True)
