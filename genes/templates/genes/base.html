@@ -1,59 +1,36 @@
 <!DOCTYPE html>
 {% load static %}
 
-<head>
-  <script> <!-- Access path here once to load tsv file in other scripts -->
-    var expr_tsv_path = "{% static 'js/expr_02.tsv' %}";
-  </script>
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
-  <script type="text/javascript" src="{% static "js/base.js" %}"></script>
-  <link type="text/css" href="{% static "css/base.css" %}" rel="stylesheet">
-</head>
-
 <div id="leftbox">
 <svg class="chart" id="expr_jan"></svg>
 <svg class="chart" id="expr_gte"></svg>
 <svg class="chart" id="expr_tcgan"></svg>
 </div>
-<!-- <head> -->
-<!-- <script type="text/javascript"> -->
+
+<div id="rightbox">
+  <div id="venn">
+    <svg id="venn"></svg>
+  </div>
+</div>
+
+<head>
+    <!-- Load venn library DONT FORGET TO INCLUDE REFERENCE -->
+    
+  <script> <!-- Access path here once to load tsv file in other scripts -->
+    var expr_tsv_path = "{% static 'js/expr_02.tsv' %}";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+  <script type="text/javascript" src="{% static "node_modules/venn.js/build/venn.js" %}"></script>
   
-<!--   <\!-- d3.select(".chart").attr("width", 600); -\-> -->
-<!--   var data = [4, 8, 15, 16, 23, 42]; -->
+  <script type="text/javascript" src="{% static "js/base.js" %}"></script>
 
-<!--   var width = 420, barHeight = 20; -->
 
-<!--   var x = d3.scaleLinear() -->
-<!--   .domain([0, d3.max(data)]) -->
-<!--   .range([0, width]); -->
-
-<!--   var chart = d3.select('.chart') -->
-<!--   .attr("width", width) -->
-<!--   .attr("height", barHeight * data.length); -->
-
-<!--   var bar = chart.selectAll("g") -->
-<!--   .data(data) -->
-<!--   .enter().append("g") -->
-<!--   .attr("transform", function(d, i) { return "translate(0,"+i*barHeight+")"; }); -->
-
-<!--   bar.append("rect") -->
-<!--   .attr("width", x) -->
-<!--   .attr("height", barHeight - 1); -->
-
-<!--   bar.append("text") -->
-<!--   .attr("x", function(d) { return x(d) - 3; }) -->
-<!--   .attr("y", barHeight / 2) -->
-<!--   .attr("dy", ".35em") -->
-<!--   .text(function(d) {return d; }); -->
-  
-
-<!-- </script> -->
-<!-- </head> -->
-
-<!-- <head> -->
-<!--   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
-<!--   <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script> -->
-<!--   <script type="text/javascript" src="{% static "js/demo.js" %}"></script> -->
-<!--   <link type="text/css" href="{% static "css/demo.css" %}" rel="stylesheet"> -->
-<!-- </head> -->
+  <link type="text/css" href="{% static "css/base.css" %}" rel="stylesheet">
+</head
+>
+<!-- <div id="leftbox"> -->
+<!-- <svg class="chart" id="expr_jan"></svg> -->
+<!-- <svg class="chart" id="expr_gte"></svg> -->
+<!-- <svg class="chart" id="expr_tcgan"></svg> -->
+<!-- </div> -->

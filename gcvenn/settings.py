@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from django.conf import settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 THIS_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -39,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'genes'
+    'genes',
+
 ]
 
 MIDDLEWARE = [
@@ -116,6 +118,14 @@ USE_L10N = True
 
 USE_TZ = True
 
+# List of finder classes that know how to find static files in
+# various locations.
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -127,15 +137,14 @@ STATIC_URL = '/static/'
 
 SHELL_PLUS = 'ipython'
 STATICFILE_DIRS = [
+    os.path.join(ROOT_PATH, 'node_modules/'),    
     os.path.join(ROOT_PATH, 'genes/static/'),
-    os.path.join(ROOT_PATH, 'node_modules'),
+
+    # os.path.join(BASE_DIR, 'static/'),
+
     # os.path.join(ROOT_PATH, 'gcvenn/staticfiles')
 ]
 
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
-)
+

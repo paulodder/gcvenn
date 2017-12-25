@@ -1,7 +1,14 @@
 from django.urls import path
 
-from . import views
+from genes.views import *
+
 
 urlpatterns = [
-    path('', views.base, name='base'),
-    ]
+    path('', base, name='base'),
+
+# AJAX REQUESTS
+    path('requests/', filter_gene_indices, name='filter_gene_indices'),
+
+    
+]
+
