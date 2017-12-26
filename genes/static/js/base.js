@@ -1,6 +1,9 @@
 
+IV = 0.01;
 
-	// Initialize dictionary that maps stringified integers to
+function round(n) {
+    return Math.round(n/IV)*IV;
+}	// Initialize dictionary that maps stringified integers to
 	// lists with full set names so venn diagram can be drawn
 	// yet save space in dataset by allowing integers to reprsent
 	// set integers
@@ -33,17 +36,54 @@
 	    
 	];
 
+var vennDiv = d3.select("#venn");
+vennDiv.datum(sets).call(venn.VennDiagram());
+
+//Add tooltips
+var tooltip = d3.select("body").append("div")
+    .attr("class", "venntooltip");
+
+// Add listners to all the groups to display tooltip on mouseover
+vennDiv.selectAll("g")
+    .on("mouseover", function(d, i) {
+	// Sort areas relative to current item
+	// console.log(d.size, i);
+	venn.sortAreas(vennDiv, d);
+	// Display tooltip with current size
+	tooltip.transition().duration(400).style("opacity", 0.9);
+	tooltip.attr("text", d.size+" genes.");
+	//the current path
+	var selection = d3.select(this).transition("tooltip")
+	    .duration(400).select("path")
+	    .style("stroke-width", 3)
+	    .style("fill-opacity", d.sets.length == 1 ? .4: .1)
+	    .style("stroke-opacity", 1);
+	console.log(tooltip.attr("text"));
+    })
+    .on("mousemove", function() {
+	tooltip.style("left", (d3.event.pageX) + "px")
+	    .style("top", (d3.event.pageY - 28) + "px");
+	console.log(d3.event.pageY, d3.event.pageX);
+    })
+    .on("mouseout", function(d, i) {
+	tooltip.transition().duration(400).style("opacity", 0.9);
+	var selection = d3.select(this).transition("tooltip").duration(400);
+	selection.select("path")
+	    .style("stroke-width", 0)
+	    .style("fill-opacity", d.sets.length == 1? .25 : .0)
+	    .style("stroke-opacity", 0);
+    });
+
 // Initial visualization of graph with default values, from hereon altered by
 // update_venn
-var chart = venn.VennDiagram();
-d3.select("#venn")
-    .datum(sets)
-    .call(chart);
+// var chart = venn.VennDiagram();
+// d3.select("#venn")
+//     .datum(sets)
+//     .call(chart);
 
 
 
-
-
+// Start drawing of graphs
     var margin = {top: 20, left: 30, right: 30, bottom: 30}
     var width = 800 - margin.left - margin.right,
 	height = 200 - margin.top - margin.bottom;
@@ -131,20 +171,26 @@ d3.select("#venn")
 	.y0(height)
 	.y1(function(d) { return y_tcgan(d.expr_tcgan); });
     
-    
+// var data_chart;
     d3.tsv(expr_tsv_path, type, function(error, data) {
-	
+
+	data_chart = data;
+
+
+console.log('out func', data_chart);
 	// Set domains of y scales
-	y_jan.domain([0, d3.max(data, function(d) {return d.expr_jan; })]);
-	y_gte.domain([0, d3.max(data, function(d) {return d.expr_gte; })]);
-	y_tcgan.domain([0, d3.max(data, function(d) {return d.expr_tcgan; })]);
+	y_jan.domain([0, d3.max(data_chart, function(d) {return d.expr_jan; })]);
+	y_gte.domain([0, d3.max(data_chart, function(d) {return d.expr_gte; })]);
+	y_tcgan.domain([0, d3.max(data_chart, function(d) {return d.expr_tcgan; })]);
 
 	// Set domain of x-scale (invariant to all graphs)
-	x.domain([0, d3.max(data, function(d) {return d.x_value; })]);
+	x.domain([0, d3.max(data_chart, function(d) {return d.x_value; })]);
 
 	// Invert x
 
 	var invx = x.invert;
+
+	
 
 
 	// function brushended(){
@@ -187,12 +233,12 @@ d3.select("#venn")
 	// chart_jan.append("path")
 	//     .attr("class", "area")
 	//     .attr("id", "area_jan")
-	//     .attr("d", area_jan([data[1], data[5]]));
+	//     .attr("d", area_jan([data_chart[1], data_chart[5]]));
 
 	chart_jan.append("path")
 	    .attr("class", "line")
 	    .attr("id", "line_jan")
-	    .attr("d", line_jan(data));
+	    .attr("d", line_jan(data_chart));
 
 	// Add x Axis, line, and area to gte
 	chart_gte.append("g")
@@ -207,12 +253,12 @@ d3.select("#venn")
 	chart_gte.append("path")
 	    .attr("class", "area")
 	    .attr("id", "area_gte")
-	    .attr("d", area_gte(data));
+	    .attr("d", area_gte(data_chart));
 
 	chart_gte.append("path")
 	    .attr("class", "line")
 	    .attr("id", "line_gte")
-	    .attr("d", line_gte(data));
+	    .attr("d", line_gte(data_chart));
 	
 	// Add x Axis, line, and area to tcgan
 	chart_tcgan.append("g")
@@ -227,22 +273,35 @@ d3.select("#venn")
 	chart_tcgan.append("path")
 	    .attr("class", "area")
 	    .attr("id", "area_tcgan")
-	    .attr("d", area_tcgan(data));
+	    .attr("d", area_tcgan(data_chart));
 
 	chart_tcgan.append("path")
 	    .attr("class", "line")
 	    .attr("id", "line_tcgan")
-	    .attr("d", line_tcgan(data));
+	    .attr("d", line_tcgan(data_chart));
 
 	// Add brushes
 	var brush_jan = d3.brushX()
 	    .extent([[0, 0], [width, height]])
+	    .on("brush", function(d) {
+		// Set input range values accordingly
+ 		var cur_range = d3.brushSelection(this).map(x.invert);
+		d3.select("#input_min_jan").attr("value", round(cur_range[0]));
+		d3.select("#input_max_jan").attr("value", round(cur_range[1]));}
+	       )
 	    .on("end", update_venn);
     
 
 	var brush_gte = d3.brushX()
 	    .extent([[0, 0], [width, height]])
-	    .on("end", update_venn);// (this))
+	    .on("end", update_venn)
+	    .on("brush", function(d) {
+		// Set input range values accordingly
+ 		var cur_range = d3.brushSelection(this).map(x.invert);
+		d3.select("#input_min_gte").attr("value", round(cur_range[0]));
+		d3.select("#input_max_gte").attr("value", round(cur_range[1]));}
+	       )
+;// (this))
 		// var x_min = x.invert(d3.brushSelection(this)[0]),
 		//     x_max = x.invert(d3.brushSelection(this)[1]);
 		// console.log(x_min, x_max);
@@ -250,15 +309,17 @@ d3.select("#venn")
 
 	var brush_tcgan = d3.brushX()
 	    .extent([[0, 0], [width, height]])
-	    .on("end", update_venn);//fillArea(this))
-		// var x_min = x.invert(d3.brushSelection(this)[0]),
-		//     x_max = x.invert(d3.brushSelection(this)[1]);
-
-	    // 	console.log(x_min, x_max);
-	    // });
-
+	    .on("end", update_venn)
+	    .on("brush", function(d) {
+		// Set input range values accordingly
+ 		var cur_range = d3.brushSelection(this).map(x.invert);
+		d3.select("#input_min_tcgan").attr("value",
+						   round(cur_range[0]));
+		d3.select("#input_max_tcgan").attr("value",
+						   round(cur_range[1]));}
+	       )
 	// Append brush to chart_jan
-	chart_jan.append("g")
+	brush_area_jan = chart_jan.append("g")
 	    .attr("class", "brush")
 	    .attr("id", "brush_jan")
 	    .call(brush_jan)
@@ -287,13 +348,43 @@ d3.select("#venn")
 	    // .on("mousedown touchstart", null);
 
 	function brushed() {
-	    var extent = d3.event.selection.map(x.invert, x);
-	};	
+	    var cur_range = d3.brushSelection(this).map(x.invert);
+
+	    d3.select("#input_min_jan").attr("value", round(cur_range[0]));
+	    d3.select("#input_max_jan").attr("value", round(cur_range[1]));	};	
 	// console.log(x_values);
+
+	// WHY DOES THIS NOT WORK?!
+	// d3.selectAll("input").on("change", function() {
+	//     console.log('changing input')
+	//     var ranges = d3.selectAll(".input_range").nodes().map(
+	// 	function(e) {
+	// 	    return parseFloat(e.value);
+	// 	});
+	//     var brush_jan = d3.select("#brush_jan");
+	//     console.log(d3.select("#div_chart_jan"));
+	//     d3.select("#expr_jan").call(brush_jan)
+	// 	.call(brush_jan.move, [3, 5].map(x));
+	// });
+
+
+	    
+
+
+	   // d3.select("").call(brush_jan.move, [0, 1].map(x));
+	   // brush_area_jan// make sure to select right div to allow moving, heck bubse
+	    // 	.select("#brush_jan").remove()
+	    // d3.select("#brush_jan").call(
+	    // chart_jan
+	    // 	.call(brush_jan)
+	    
+	    // d3.select("chart_jan").call(brush_jan.move, [ranges[0], ranges[1]].map(x));
+	    // console.log(ranges)
+
 
 
 	    //Place in ready to prevent execution before initalization of all brushes
-	function update_venn(set_sizes) {
+	   function update_venn(set_sizes) {
 
 	    // var extent_jan=  d3.brushSelection(this).map(x.invert);
  	    // console.log(extent_jan);
@@ -331,10 +422,49 @@ d3.select("#venn")
 			{sets: setAbbrevs['3'], size: 1019},
 			{sets: setAbbrevs['5'], size: 146},
 		    ];
-		    d3.select("#venn").datum(sets).call(chart);
+		    d3.select("#venn").datum(sets).call(venn.VennDiagram());
+		    var vennDiv = d3.select("#venn");
+		    vennDiv.datum(sets).call(venn.VennDiagram());
+
+		    //Add tooltips
+		    var tooltip = d3.select("body").append("div")
+			.attr("class", "venntooltip");
+
+		    // Add listners to all the groups to display tooltip on mouseover
+		    vennDiv.selectAll("g")
+			.on("mouseover", function(d, i) {
+			    // Sort areas relative to current item
+			    // console.log(d.size, i);
+			    venn.sortAreas(vennDiv, d);
+			    // Display tooltip with current size
+			    tooltip.transition().duration(400).style("opacity", 0.9);
+			    tooltip.attr("text", d.size+" genes.");
+			    //the current path
+			    var selection = d3.select(this).transition("tooltip")
+				.duration(400).select("path")
+				.style("stroke-width", 3)
+				.style("fill-opacity", d.sets.length == 1 ? .4: .1)
+				.style("stroke-opacity", 1);
+			    console.log(tooltip.attr("text"));
+			})
+			.on("mousemove", function() {
+			    tooltip.style("left", (d3.event.pageX) + "px")
+				.style("top", (d3.event.pageY - 28) + "px");
+			    console.log(d3.event.pageY, d3.event.pageX);
+			})
+			.on("mouseout", function(d, i) {
+			    tooltip.transition().duration(400).style("opacity", 0.9);
+			    var selection = d3.select(this).transition("tooltip").duration(400);
+			    selection.select("path")
+				.style("stroke-width", 0)
+				.style("fill-opacity", d.sets.length == 1? .25 : .0)
+				.style("stroke-opacity", 0);
+			});
 
 		    
 	    	},
+
+		
 	    })
 	    
 	    
@@ -364,8 +494,8 @@ d3.select("#venn")
 	function fillArea(curNode) {
 	    console.log(d3.brushSelection(curNode));
 	}
-    });
 
+    })
 
 
 // Define data type
@@ -444,3 +574,30 @@ function type(d) {
 // }
 
 
+// Add listener that responds to changes in values in any of the inputs
+
+
+
+d3.select("#downloadCurSel").on("click", function() {
+        try {
+	
+	    var vals_jan = d3.brushSelection(
+		d3.select("#brush_jan").node()).map(x.invert),
+		vals_gte = d3.brushSelection(
+		    d3.select("#brush_gte").node()).map(x.invert),
+		vals_tcgan = d3.brushSelection(
+		    d3.select("#brush_tcgan").node()).map(x.invert);
+	}
+    catch(ReferenceError){
+	return; // In case not all are defined, yet, no need to update
+	// venn diagram as has already been drawn at top
+    }
+    $.ajax({
+	method: "GET",
+	url: "download/?conds="+vals_jan[0]+","+vals_jan[1]+"-"+vals_gte[0]+","+vals_gte[1]+"-"+vals_tcgan[0]+","+vals_tcgan[1],
+	async: false,
+	success: function() {
+	    window.location = "download/?conds="+vals_jan[0]+","+vals_jan[1]+"-"+vals_gte[0]+","+vals_gte[1]+"-"+vals_tcgan[0]+","+vals_tcgan[1];
+	}
+    });
+});

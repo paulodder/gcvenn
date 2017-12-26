@@ -1,27 +1,37 @@
 <!DOCTYPE html>
 {% load static %}
-
-<div id="leftbox">
-<svg class="chart" id="expr_jan"></svg>
+<body>
+  <div id="rightbox">
+    <button id="downloadCurSel">Download current selection (CSV) </button>
+  <div id="venn">
+    <svg ></svg>
+  </div>
+</div>
+  <div id="leftbox">
+    <div id="div_chart_jan">
+      <input class="input_range" id="input_min_jan" type="number" step="0.01" min="0" max="13">
+      <input class="input_range" id="input_max_jan" type="number" step="0.01" min="0" max="13">
+      <svg class="chart" id="expr_jan"></svg>
+    </div>
 <svg class="chart" id="expr_gte"></svg>
 <svg class="chart" id="expr_tcgan"></svg>
 </div>
 
-<div id="rightbox">
-  <div id="venn">
-    <svg id="venn"></svg>
-  </div>
-</div>
 
+</body>
 <head>
     <!-- Load venn library DONT FORGET TO INCLUDE REFERENCE -->
     
   <script> <!-- Access path here once to load tsv file in other scripts -->
     var expr_tsv_path = "{% static 'js/expr_02.tsv' %}";
   </script>
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
-  <script type="text/javascript" src="{% static "node_modules/venn.js/build/venn.js" %}"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
+  <!-- <script type="text/javascript" src="https://d3js.org/d3.v4.js"></script> -->
+ <!-- local -->
+  <script type="text/javascript" src="{% static "node_modules/d3/build/d3.min.js" %}"></script>
+  <script type="text/javascript" src="{% static "node_modules/jquery/dist/jquery.min.js" %}"></script>
+  
+  <script type="text/javascript" src="{% static "node_modules/venn.js/build/venn.min.js" %}"></script>
   
   <script type="text/javascript" src="{% static "js/base.js" %}"></script>
 
