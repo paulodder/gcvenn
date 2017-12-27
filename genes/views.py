@@ -12,7 +12,16 @@ from datetime import datetime
 # notes to self:
 # Look at StreamingHttpResponse for streaming/generating large CSV files
 # Set content_type to tell browser to treat response as file attachment
+#AUX FUNC
+def cond_satisf(gene, conds):
+    """Given a list with 3 2-tuples for Jan, GTE, TCGAN expression, respectively, 
+    checks if gene satisfies conditions"""
+    return all([conds[0][0] <= gene.Jan_expr <= conds[0][1],
+                conds[1][0] <= gene.GTE_expr <= conds[1][1],
+                conds[2][0] <= gene.TCGAN_expr <= conds[2][1]])
+    
 
+#VIEW FUNC
 def base(request):
     """View that serves the standard website"""
 
@@ -24,6 +33,11 @@ def base(request):
 
 def filter_gene_indices(request):
     conds_str = request.GET["conds"]
+    conds_str = conds_str.replace('13', '20') # In case 13 is present, accepts any
+    # gene with expression lower than 20 (max possible gene expression in
+    # our database (to prevent mismatch because some genes are not presented on
+    # graph)
+    bruggeman= Database.objects.get(name="bruggeman_et_al")
     conds = []
     for t in conds_str.split('-'):
         t_splitted = t.split(',')
@@ -31,10 +45,11 @@ def filter_gene_indices(request):
     print(conds)
 
     # Filter bruggeman genes based on provided conds
-    brug = set(g.id for g in Gene.objects.all() if
-               conds[0][0] <= g.Jan_expr <=conds[0][1]
-               and conds[1][0] <= g.GTE_expr <=conds[1][1]
-               and conds[2][0] <= g.TCGAN_expr <=conds[2][1])
+    brug = set(g.id for g in bruggeman.genes.all() if
+               cond_satisf(g, conds))
+               # conds[0][0] <= g.Jan_expr <=conds[0][1]
+               # and conds[1][0] <= g.GTE_expr <=conds[1][1]
+               # and conds[2][0] <= g.TCGAN_expr <=conds[2][1])
     
     wang = set(g.id for g in Database.objects.get(
         name="wang_et_al").genes.all())
@@ -43,17 +58,22 @@ def filter_gene_indices(request):
     brug_wang = brug.intersection(wang)
     brug_ct_db = brug.intersection(ct_db)
     # Return in format sizes: 1, 4, 6, 7
+    print(len(brug))
     return HttpResponse(json.dumps([len(brug), len(brug_ct_db), len(brug_wang), 
                                     len(brug_wang.intersection(brug_ct_db))]))
 
 def generate_csv(request):
     """Genereates csv file given the current selection criteria"""
     conds_str = request.GET["conds"]
+    conds_str.replace('13', '20') # See above
     conds = []
+    bruggeman= Database.objects.get(name="bruggeman_et_al")
+
     for t in conds_str.split('-'):
         t_splitted = t.split(',')
         conds.append((float(t_splitted[0]), float(t_splitted[1])))
-    
+
+
     response = HttpResponse(content_type='text/csv')#content_type='csv')# content_type="text/csv",
     # response['Content-Type'] = 'csv'
     response['Content-Disposition'] = ("attachment;filename=Bruggeman_GC_genes_%s.csv" %
@@ -71,11 +91,10 @@ def generate_csv(request):
                      'Previously identified in CT databse'])
 
     # Filter bruggeman genes based on provided conds
-    brug_genes = set(g for g in Database.objects.get(
-        name="bruggeman_et_al").genes.all() if
-                     conds[0][0] <= g.Jan_expr <=conds[0][1]
-                     and conds[1][0] <= g.GTE_expr <=conds[1][1]
-                     and conds[2][0] <= g.TCGAN_expr <=conds[2][1])
+    brug_genes = set(g for g in bruggeman.genes.all() if cond_satisf(g, conds))
+                     # conds[0][0] <= g.Jan_expr <=conds[0][1]
+                     # and conds[1][0] <= g.GTE_expr <=conds[1][1]
+                     # and conds[2][0] <= g.TCGAN_expr <=conds[2][1])
     
     wang_genes = Database.objects.get(name="wang_et_al").genes.all()
     ct_db_genes = Database.objects.get(name="ct_db").genes.all()
