@@ -90,9 +90,9 @@ def generate_csv(request):
 
     brug_sorted = sorted(brug_genes, key=lambda g: (wang_member[g],
                                                     ct_db_member[g]))
-    with open('gene_name_csv_row.txt', 'r') as f:
+    with open('gene_rows_fulldata.txt', 'r') as f:
         name_row_dic = json.load(f)
-        
+    writer.writerow(name_row_dic['HEADER'])
     for g in brug_sorted:
         writer.writerow(name_row_dic[g.rev_ann])
 
