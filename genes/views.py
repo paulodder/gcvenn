@@ -11,7 +11,8 @@ from datetime import datetime
 
 # notes to self:
 # Look at StreamingHttpResponse for streaming/generating large CSV files
-# Set content_type to tell browser to treat response as file attachment
+# Look at gene select
+# 
 #AUX FUNC
 def cond_satisf(gene, conds):
     """Given a list with 3 2-tuples for Jan, GTE, TCGAN expression, respectively, 
@@ -65,7 +66,7 @@ def filter_gene_indices(request):
 def generate_csv(request):
     """Genereates csv file given the current selection criteria"""
     conds_str = request.GET["conds"]
-    conds_str.replace('13', '20') # See above
+    conds_str = conds_str.replace('13', '20') # See above
     conds = []
     bruggeman= Database.objects.get(name="bruggeman_et_al")
 
@@ -80,16 +81,6 @@ def generate_csv(request):
                                        datetime.now().strftime("%b_%d_%Y_%H.%M").lower())
 
     writer = csv.writer(response)
-    writer.writerow(['Gene name',
-                     'Germ cell expression (filtered %s max. expression < %s)' % (
-                         conds[0][0], conds[0][1]),
-                     'Somatic cell expression (filtered %s max. expression <  %s)' % (
-                         conds[1][0], conds[1][1]),
-                     'Cancerous cell expression (filtered %s max. < expression <  %s)' % (
-                         conds[2][0], conds[2][1]),
-                     'Previously identified by Wang et al.',
-                     'Previously identified in CT databse'])
-
     # Filter bruggeman genes based on provided conds
     brug_genes = set(g for g in bruggeman.genes.all() if cond_satisf(g, conds))
                      # conds[0][0] <= g.Jan_expr <=conds[0][1]
@@ -109,6 +100,7 @@ def generate_csv(request):
 
     brug_sorted = sorted(brug_genes, key=lambda g: (wang_member[g],
                                                     ct_db_member[g]))
+    print(len(brug_sorted))
     with open('gene_rows_fulldata.txt', 'r') as f:
         name_row_dic = json.load(f)
     writer.writerow(name_row_dic['HEADER'])
