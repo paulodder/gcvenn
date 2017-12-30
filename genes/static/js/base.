@@ -1,0 +1,34 @@
+//Add tooltips
+var tooltip = d3.select("body").append("div")
+    .attr("class", "venntooltip");
+
+// Add listners to all the groups to display tooltip on mouseover
+vennDiv.selectAll("g")
+    .on("mouseover", function(d, i) {
+	// Sort areas relative to current item
+	// console.log(d.size, i);
+	venn.sortAreas(vennDiv, d);
+	// Display tooltip with current size
+	tooltip.transition().duration(400).style("opacity", 0.9);
+	tooltip.attr("text", d.size+" genes.");
+	//the current path
+	var selection = d3.select(this).transition("tooltip")
+	    .duration(400).select("path")
+	    .style("stroke-width", 3)
+	    .style("fill-opacity", d.sets.length == 1 ? .4: .1)
+	    .style("stroke-opacity", 1);
+	console.log(tooltip.attr("text"));
+    })
+    .on("mousemove", function() {
+	tooltip.style("left", (d3.event.pageX) + "px")
+	    .style("top", (d3.event.pageY - 28) + "px");
+	console.log(d3.event.pageY, d3.event.pageX);
+    })
+    .on("mouseout", function(d, i) {
+	tooltip.transition().duration(400).style("opacity", 0.9);
+	var selection = d3.select(this).transition("tooltip").duration(400);
+	selection.select("path")
+	    .style("stroke-width", 0)
+	    .style("fill-opacity", d.sets.length == 1? .25 : .0)
+	    .style("stroke-opacity", 0);
+    });
