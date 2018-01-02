@@ -1,6 +1,88 @@
-./* chart rect { */
- /*    fill: steelblue; */
+@variables color {
+    jan: #D3CC44;
+    gte: #76C25B;
+    tcgan: #B35A5A;
+}
+	     
+
+	     
+
+/* Chart axes labels */
+/* #venn { */
+/*     position: relative; */
+/*     top: 0px; */
+/*     left: 0px; */
 /* } */
+/* #downloadCurSel { */
+/*     float: left, top; */
+/* } */
+
+body {
+    width: 2000px;
+    overflow: auto;
+}
+#leftbox {
+    float: left;
+    width: 750px;
+}
+
+#venn {
+    float: left;
+    width: 1000;
+    height: 1000;
+}
+#venn svg {
+    float: left;
+}
+
+
+
+.chart_div {
+    float: left;
+    width: 750px;
+}
+
+
+
+[crossed-out="true"] {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+.ylabel {
+    font-size: 11pt;
+}
+
+input {
+    width: 50px;
+}
+
+.xlabel {
+    font-size: 11pt;
+}
+
+
+rect.selection {
+    opacity: 00;
+}
+
+rect.handle.handle-custom--w {
+    opacity: 0.5;
+}
+/* g.tick text { */
+/*     transform: rotate(-90); */
+/* } */
+
+/* CT genes Wang et al._Current selectionBruggeman et al. { */
+/*     opacity: 1; */
+/* } */
+/* CT genes Wang et al. { */
+/*     opacity: 1; */
+/*     fill: steelblue; */
+/* } */
+/* .venn-area { */
+/*     opacity: 1; */
+/* } */
+
 /* JAN:	#D5CA49 */
 /* GTE #78C160 */
 /* GCGAN #B45A5A */
@@ -12,16 +94,49 @@
 /*     stroke-width: 2; */
 /*     fill: none; */
 /* } */
-
+/* A: bruggeman: */
+/* B: CT db
+C: Wang
+A: #EB1D23 
+B: #334FA3
+C: #3BADE3
+AB: #723F78
+BC: #366FB8
+CD 
+*/
+     
+       
+/* Ticks */
 .axis text {
-    font: 10px sans-serif;
+    font-size: 10px;
+
+    text-align: right;
 }
 
+.nofgenes  {
+    text-decoration: underline;
+}
+    
 .axis line {
     fill: none;
     stroke: grey;
-    stroke-width: 0;
+    stroke-width: 1;
     shape-rendering: crispEdges;
+}
+.grid {
+    stroke: grey;
+    opacity: 0.1;
+    stroke-width: 0.5;
+    /* /\* stroke-width: 1; *\/ */
+    /* opacity: 0.5; */
+}
+
+.axis path {
+    fill: none;
+    stroke: grey;
+    stroke: 2;
+    shape-rendering: crispEdges;
+    
 }
 path line {
     fill: none;
@@ -31,38 +146,62 @@ path line {
 /* JAN GRAPH */
 #line_jan {
     fill: none;
-    stroke: #D5CA49;
-    stroke-width: 0;
+    stroke: #D3CC44;
+    stroke-width: 2;
 }
 
+.area {
+    opacity: 0.6;
+}
 #area_jan {
-    fill: #D5CA49;
+    fill: #D3CC44;
     /* background-color: steelblue; */
     stroke-width: 0;
+ 
 }
 /* GTE GRAPH */
 #line_gte {
     fill: none;
-    stroke: #78C160;
-    stroke-width: 0;
+    stroke: #76C25B;
+    stroke-width: 2;
 }
 
 #area_gte {
     fill: #78C160;
     stroke-width: 0;
+ 
 }
 
 #line_tcgan {
     fill: none;
-    stroke: #B45A5A;
-    stroke-width: 0;
+    stroke: #B35A5A;
+    stroke-width: 2;
 }
 
 #area_tcgan {
-    fill:  #B45A5A; 
+    fill:  #B45A5A;
     stroke-width: 0;
 }
+#leftbox div {
+    float: left;
+}
 
+#leftbox .chart_div {
+    border: 1px outset;
+    border-radius: 10px;
+    float: left;
+    display: grid;
+    /* grid-grap: 10px; */
+}
+
+.chart_status {
+    margin-top: -15px;
+    margin-left: 50px;
+}
+
+.chart_status p {
+    float: left;
+}
 
 /* .chart text { */
 /*     fill: white; */
@@ -70,4 +209,67 @@ path line {
 /*     text-anchor: end; */
 /* } */
 
+}
+#brush_jan rect.selection {
+    /* fill: #D5CA49; */
+    
+}
+#brush_gte rect.selection {
+    /* fill: #78C160; */
+}
+    
+#rightbox {
+    align: right;
+    position: relative;
+    float: left;
+    
+}
 
+#venn  {
+
+    border: 1px outset;
+    border-radius: 10px;
+}		
+
+#leftbox {
+    position: relative;
+    float: left;
+}
+
+.venntooltip {
+  position: absolute;
+  text-align: center;
+  width: 128px;
+  height: 16px;
+  background: #333;
+  color: #ddd;
+  padding: 2px;
+  border: 0px;
+  border-radius: 8px;
+  opacity: 0;
+}
+body {
+    'Open Sans', sans-serif;
+}
+
+#dlreset {
+    width: 750px;
+}
+#reset_original {
+    position: relative;
+    float: right;
+}
+
+#saveVenn {
+    position: relative;
+    float: left;
+}
+
+button {
+    background: none;
+    border: none;
+    color: grey;
+    font-size: 12.5pt;
+    cursor: pointer;
+    
+}

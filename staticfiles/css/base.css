@@ -1,0 +1,110 @@
+rect.selection {
+    opacity: 1;
+}
+
+CT genes Wang et al._Current selectionBruggeman et al. {
+    opacity: 1;
+}
+/* CT genes Wang et al. { */
+/*     opacity: 1; */
+/*     fill: steelblue; */
+/* } */
+/* .venn-area { */
+/*     opacity: 1; */
+/* } */
+
+/* JAN:	#D5CA49 */
+/* GTE #78C160 */
+/* GCGAN #B45A5A */
+
+
+
+/* path { */
+/*     stroke: steelblue; */
+/*     stroke-width: 2; */
+/*     fill: none; */
+/* } */
+/* A: bruggeman: */
+/* B: CT db
+C: Wang
+A: #EB1D23 
+B: #334FA3
+C: #3BADE3
+AB: #723F78
+BC: #366FB8
+CD 
+*/
+     
+       
+
+.axis text {
+    font: 10px sans-serif;
+}
+
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 0;
+    shape-rendering: crispEdges;
+}
+path line {
+    fill: none;
+    stroke: #000;
+}
+
+/* JAN GRAPH */
+#line_jan {
+    fill: none;
+    stroke: #D5CA49;
+    stroke-width: 2;
+}
+
+.area {
+    opacity: 0.5;
+}
+#area_jan {
+    fill: #D5CA49;
+    /* background-color: steelblue; */
+    stroke-width: 0;
+ 
+}
+/* GTE GRAPH */
+#line_gte {
+    fill: none;
+    stroke: #78C160;
+    stroke-width: 2;
+}
+
+#area_gte {
+    fill: #78C160;
+    stroke-width: 0;
+ 
+}
+
+#line_tcgan {
+    fill: none;
+    stroke: #B45A5A;
+    stroke-width: 2;
+}
+
+#area_tcgan {
+    fill:  #B45A5A; 
+    stroke-width: 0;
+}
+
+
+/* .chart text { */
+/*     fill: white; */
+/*     font: 10px sans-serif; */
+/*     text-anchor: end; */
+/* } */
+
+
+#brush_jan rect.selection {
+    /* fill: #D5CA49; */
+    
+}
+#brush_gte rect.selection {
+    /* fill: #78C160; */
+}
+    

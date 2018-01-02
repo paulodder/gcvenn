@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, StreamingHttpResponse
 from django.template import loader
 
 from genes.models import *
@@ -9,6 +9,16 @@ import csv
 from collections import Counter
 from datetime import datetime
 
+
+class Echo:
+    """An object that implements just the write method of the file-like
+    interface.
+    """
+    def write(self, value):
+        """Write the value by returning it, instead of storing in a buffer."""
+        return value
+
+    
 # notes to self:
 # Look at StreamingHttpResponse for streaming/generating large CSV files
 # Look at gene select
@@ -25,11 +35,6 @@ def cond_satisf(gene, conds):
 #VIEW FUNC
 def base(request):
     """View that serves the standard website"""
-
-    # template = loader.get_template('genes/base.html' )
-    # response = HttpResponse(template.render))    
-    # response['age'] = 120
-    # print("AM i here?")
     return render(request, 'genes/base.html')
 
 
@@ -76,41 +81,27 @@ def generate_csv(request):
         t_splitted = t.split(',')
         conds.append((float(t_splitted[0]), float(t_splitted[1])))
 
-
-    response = HttpResponse(content_type='text/csv')#content_type='csv')# content_type="text/csv",
-    # response['Content-Type'] = 'csv'
-    response['Content-Disposition'] = ("attachment;filename=Bruggeman_GC_genes_%s.csv" %
-                                       datetime.now().strftime("%b_%d_%Y_%H.%M").lower())
-
-    writer = csv.writer(response)
     # Filter bruggeman genes based on provided conds
-    brug_genes = set(g for g in bruggeman.genes.all() if cond_satisf(g, conds))
-                     # conds[0][0] <= g.Jan_expr <=conds[0][1]
-                     # and conds[1][0] <= g.GTE_expr <=conds[1][1]
-                     # and conds[2][0] <= g.TCGAN_expr <=conds[2][1])
+    brug_genes = set(g.rev_ann for g in bruggeman.genes.all() if
+                     cond_satisf(g, conds))
     
-    wang_genes = Database.objects.get(name="wang_et_al").genes.all()
-    ct_db_genes = Database.objects.get(name="ct_db").genes.all()
-    
-    brug_wang = brug_genes.intersection(wang_genes)
-    brug_ct_db = brug_genes.intersection(ct_db_genes)
 
-    # wang_ct_db = wang.intersection(ct_db)
+    brug_sorted = sorted(brug_genes)
 
-    ct_db_member = Counter(brug_wang)
-    wang_member = Counter(brug_ct_db)
-
-    # brug_sorted = sorted(brug_genes, key=lambda g: (wang_member[g],
-    #                                                 ct_db_member[g]))
-    # sort based on name
-    brug_sorted = sorted(brug_genes, key=lambda g: g.rev_ann)
-    print(len(brug_sorted))
+    # Write to pseudobuffer for streaming purposes
+    pseudo_buffer = Echo()
     with open('full_gene_rows.txt', 'r') as f:
         name_row_dic = json.load(f)
-    writer.writerow(name_row_dic['HEADER'])
-    for g in brug_sorted:
-        writer.writerow(name_row_dic[g.rev_ann])
 
+    writer = csv.writer(pseudo_buffer)
+    
+    # First write header
+    # writer.writerow(name_row_dic['HEADER'])
+    response = StreamingHttpResponse((writer.writerow(name_row_dic[gene]) for
+                                      gene in ['HEADER'] + brug_sorted),
+                                     content_type='text/csv')
+    response['Content-Disposition'] = ("attachment;filename=Bruggeman_GC_genes_%s.csv" %
+                                       datetime.now().strftime("%b_%d_%Y_%H.%M").lower())
     return response
     
 

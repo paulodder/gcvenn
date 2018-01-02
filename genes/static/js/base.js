@@ -1,8 +1,36 @@
-
+//Fix empty selection upon 
 IV = 0.01;
 
 MAX_X_DOMAIN = 13;
+DATA_IV = 0.2;
 X_IV = 0.4;
+
+var findYatXbyBisection = function(x, path, error){
+    var length_end = path.getTotalLength()
+    , length_start = 0
+    , point = path.getPointAtLength((length_end + length_start) / 2) // get the middle point
+    , bisection_iterations_max = 50
+    , bisection_iterations = 0
+
+    error = error || 0.01
+
+    while (x < point.x - error || x > point.x + error) {
+	// get the middle point
+	point = path.getPointAtLength((length_end + length_start) / 2)
+
+	if (x < point.x) {
+	    length_end = (length_start + length_end)/2
+	} else {
+	    length_start = (length_start + length_end)/2
+	}
+
+	// Increase iteration
+	if(bisection_iterations_max < ++ bisection_iterations)
+	    break;
+    }
+    return point.y
+};
+
 function round(n) {
     return Math.round(n/IV)*IV;
 }
@@ -129,7 +157,7 @@ vennChart = venn.VennDiagram(setSizeAbbrevs);
 vennDiv.datum(sets).call(vennChart);
 
 // add a tooltip
-var tooltip = d3.select("#rightbox").append("div")
+var tooltip = d3.select("body").append("div")
     .attr("class", "venntooltip");
 
 // add listeners to all the groups to display tooltip on mouseover
@@ -152,7 +180,7 @@ vennDiv.selectAll("g")
 
     .on("mousemove", function() {
         tooltip.style("left", (d3.event.pageX) + "px")
-               .style("top", (d3.event.pageY - 28) + "px");
+               .style("top", (d3.event.pageY - 28 ) + "px");
     })
     
     .on("mouseout", function(d, i) {
@@ -214,6 +242,8 @@ vennDiv.selectAll("g")
 var margin = {top: 30, left: 50, right: 50, bottom: 50}
 var width = 750 - margin.left - margin.right,
     height = 250 - margin.top - margin.bottom;
+
+
 
 var x = d3.scaleLinear()
     .range([0, width]);
@@ -317,27 +347,6 @@ var area_tcgan = d3.area()
 // var data_chart;
 d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 
-    // Jan max Set domains of y scales_
-    
-
-    // var max_gte = d3.max(data_chart, function(d) {return d.expr_gte; })
-
-    // y_gte.domain([0, max_gte]);// d3.max(data_chart, function(d) {return d.expr_gte; })]);
-
-    var max_tcgan = d3.max(data_chart, function(d) {return d.expr_tcgan; })
-
-    y_tcgan.domain([0, max_tcgan]);//d3.max(data_chart, function(d) {return d.expr_tcgan; })]);
-
-
-
-
-
-
-    
-		       
-    
-    // .tickValues(d3.range(0, MAX_X_DOMAIN, 0.4))
-
     // Set domain of x-scale (invariant to all graphs)
     x.domain([0, d3.max(data_chart, function(d) {return d.x_value; })]);
 
@@ -417,7 +426,8 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
     chart_jan.append("path")
 	.attr("class", "area")
 	.attr("id", "area_jan")
-	.attr("d", area_jan(data_chart));
+	// .attr("d", area_jan(data_chart));
+
 
     // Add line
     chart_jan.append("path")
@@ -445,7 +455,7 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("transform", "translate(" + (width/2) + " ," +
 	      (height + margin.top + 15) + ")")
 	.style("text-anchor", "middle")
-	.text("Gene expression (2log)")
+	.text("Gene expression (²log)")
 
 
     // Add x-axis and ticks
@@ -487,11 +497,6 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("class", "y axis")
 	.call(yAxis_jan);
 
-    // Add area
-    chart_jan.append("path")
-	.attr("class", "area")
-	.attr("id", "area_jan")
-	.attr("d", area_jan(data_chart));
 
     // Add line
     chart_jan.append("path")
@@ -515,7 +520,7 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
     // 	.attr("transform", "translate(" + (width/2) + " ," +
     // 	      (height + margin.top + 20) + ")")
     // 	.style("text-anchor", "middle")
-    // 	.text("Gene expression (2log)")
+    // 	.text("Gene expression (²log)")
 
     // Add chart title
 
@@ -525,76 +530,132 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("text-anchor", "middle")
 	.style("font-size", "16px")
 	.style("text-decoration", "underline")
-	.text("Gene expression in germ cells (2log scale)")
+	.text("Gene expression in germ cells (²log scale)")
 
     // Add brushes
     brush_jan = d3.brushX()
 	.extent([[0, 0], [width, height]])
 	.on("brush", function(d) {
 	    // Set input range values accordingly
- 	    var cur_range = d3.brushSelection(this).map(x.invert);
-	    // Set custom attribute which is formatted in main.css
-	    if (cur_range[1] >= 13) {
+ 	    var cur_domain_range = d3.brushSelection(this),
+		cur_range = cur_domain_range.map(x.invert),
+		dom_min_x = cur_domain_range[0],
+		dom_max_x = cur_domain_range[1],
+		min_x = cur_range[0],
+		max_x = cur_range[1]
+	    
+	    if (max_x >= 13) {
+
 		d3.select("#max_range_max_jan").attr("crossed-out",
 						      "true");
 		d3.select("#input_max_jan").attr("crossed-out",
 						      "true");
 
 	    } else {
+		
 		d3.select("#max_range_max_jan").attr("crossed-out",
 						      "false");
 		d3.select("#input_max_jan").attr("crossed-out",
 						      "false");		
-		// d3.select("#max_range_max_jan").style("visibility", "initial");
-	    }	    
-	    d3.select("#input_min_jan").attr("value", format(cur_range[0]));
-	    d3.select("#input_max_jan").attr("value", format(cur_range[1]));
-	    d3.select("#nofgenes_jan").text((F_jan_max[format(cur_range[1])]
-					     - F_jan_max[format(cur_range[0])]));
-	    update_brush_handles();
+		d3.select("#max_range_max_jan").style("visibility", "initial");
+	    }
+
+	    
+	    line_jan_node = document.getElementById("line_jan");
+
+	    // Start building array with data points with x_min, x_max as outermost
+	    // elements, and all other datapoints within x_min and x_max inbetween
+	    var newAreaData = [{x_value: min_x,
+				expr_jan: y_jan.invert(findYatXbyBisection(
+				    dom_min_x,line_jan_node, 0))}],
+		// Get indices that correspond to indices of data points contained
+		// within min and max x values
+		start = Math.ceil(min_x/DATA_IV),
+		end = Math.floor(max_x/DATA_IV) + 1;
+	    newAreaData = newAreaData.concat(data_chart.slice(start, end))
+	    newAreaData = newAreaData.concat({x_value: max_x,
+				expr_jan: y_jan.invert(findYatXbyBisection(
+				    dom_max_x,line_jan_node, 0))})
+	    
+	    // d3.select("#area_jan").remove();
+	    
+	    // chart_jan.select("path")
+	    // 	.attr("class", "area")
+	    // 	.attr("id", "area_jan")
+	    // 	.attr("d", area_jan(newAreaData))
+	    // 	.attr("z-index", "2")
+	    chart_jan.select(".area")
+		.attr("d", area_jan(newAreaData))
+		// .attr("z-index", "2")
+
+	    
+
+	    d3.select("#input_min_jan").attr("value", format(min_x));
+	    d3.select("#input_max_jan").attr("value", format(max_x));
+	    d3.select("#nofgenes_jan").text((F_jan_max[format(max_x)]
+					     - F_jan_max[format(min_x)]));
+	    update_brush_handles_jan();
 	    
 
 
 	})
 	.on("end", update_venn);
+   
+
+    function update_brush_handles_jan() {
+	var s = d3.event.selection;
+	brush_handle_jan
+	    .attr("display", null)
+	    .attr("transform", function(d, i) {
+		return "translate(" + s[i] + "," + 0 + ")";
+	    });
+    };
+    
 
     // Append brush to chart_jan
-    brush_area_jan = chart_jan.append("g")
+    brush_node_jan = chart_jan.append("g")
 	.attr("class", "brush")
 	.attr("id", "brush_jan")
-	.call(brush_jan)
+	.call(brush_jan);
+	// .on("mousedown.brush", function () {
+	//     brush_node_jan.on("mouseup.brush", function () {
+	// 	clear
+	// .attr("z-index", "1");
 
     var brushResizePath = function(d) {
     	var e = +(d.type == "e"),
     	    x = e ? 1: - 1,
-    	    y = height / 2;
+    	    y = height / 3;
     	console.log(x, y);
-    	return "M" + (.5 * x) + "," + y + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6) + "V" + (2 * y - 6) + "A6,6 0 0 " + e + " " + (.5 * x) + "," + (2 * y) + "Z" + "M" + (2.5 * x) + "," + (y + 8) + "V" + (2 * y - 8) + "M" + (4.5 * x) + "," + (y + 8) + "V" + (2 * y - 8);
+    	return ("M" + (.5 * x) + "," + y + "A6,6 0 0 " + e + " " + (6.5 * x) +
+    		"," + (y + 6) + "V" + (2 * y - 6) + "A6,6 0 0 " + e + " " +
+    		(.5 * x) + "," + (2 * y) + "Z" + "M" + (2.5 * x) + "," + (y + 8)
+    		+ "V" + (2 * y - 8) + "M" + (4.5 * x) + "," + (y + 8) + "V" +
+    		(2 * y - 8) + "M0,0" +"l0," + height);
     };
-    
-    brush_handle_jan = brush_area_jan.selectAll(".handle--custom")
+
+    brush_handle_jan = brush_node_jan.selectAll(".handle--custom")
     	.data([{type: "w"}, {type: "e"}])
     	.enter().append("path")
     	.attr("class", "handle--custom")
+	// .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
     	.attr("stroke", "#000")
     	.attr("cursor", "ew-resize")
     	.attr("d", brushResizePath)
 
 
 
-    brush_area_jan
+    brush_node_jan
 	.call(brush_jan.move, [1.6, MAX_X_DOMAIN].map(x))
 	.selectAll(".overlay")
 	// .each(function(d) {d.type = "selection"; })
 
 
-    function update_brush_handles() {
-	var s = d3.event.selection;
-	brush_handle_jan.attr("display", null).attr("transform", function(d, i) { return "translate(" + s[i] + "," + -height /4 + ")"; });
-    };
 	
 
-// GTE---------------------------------------------------------------    
+    // // GTE---------------------------------------------------------------
+   //JAN---------------------------------------------------------------------------------
+// Jan expression
     var chart_gte = d3.select('#expr_gte')
 	.attr("width", width + margin.left + margin.right)
 	.attr("height", height + margin.bottom + margin.top)
@@ -624,7 +685,7 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 
     yAxis_gte
 	.tickValues(d3.range(0, Math.ceil(max_gte/100)*100, 100).concat(
-	    Math.ceil(max_gte/100)*100))
+	    Math.ceil(max_gte/100)*100 ))
 
     
     chart_gte.append("g")
@@ -669,7 +730,8 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
     chart_gte.append("path")
 	.attr("class", "area")
 	.attr("id", "area_gte")
-	.attr("d", area_gte(data_chart));
+	// .attr("d", area_gte(data_chart));
+
 
     // Add line
     chart_gte.append("path")
@@ -697,7 +759,7 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("transform", "translate(" + (width/2) + " ," +
 	      (height + margin.top + 15) + ")")
 	.style("text-anchor", "middle")
-	.text("Gene expression (2log)")
+	.text("Gene expression (²log)")
 
 
     // Add x-axis and ticks
@@ -739,21 +801,12 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("class", "y axis")
 	.call(yAxis_gte);
 
-    // Add area
-    chart_gte.append("path")
-	.attr("class", "area")
-	.attr("id", "area_gte")
-	.attr("d", area_gte(data_chart));
 
     // Add line
     chart_gte.append("path")
 	.attr("class", "line")
 	.attr("id", "line_gte")
 	.attr("d", line_gte(data_chart))
-	// .attr("data-legend", function(d) {
-	//     return "Gene expression in germ cells"}
-	//      )
-	// .attr("data-legend-icon", "line");
     
     // Add title to axis
 
@@ -766,156 +819,443 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("dy", "1em")
 	.text("Number of genes")
 
-    // Add title
-    
+    // chart_gte.append("text")
+    // 	.attr("class", "xlabel")
+    // 	.attr("transform", "translate(" + (width/2) + " ," +
+    // 	      (height + margin.top + 20) + ")")
+    // 	.style("text-anchor", "middle")
+    // 	.text("Gene expression (²log)")
+
+    // Add chart title
+
     chart_gte.append("text")
 	.attr("x", width/2)
 	.attr("y", 0 - (margin.top / 2))
 	.attr("text-anchor", "middle")
 	.style("font-size", "16px")
 	.style("text-decoration", "underline")
-	.text("Gene expression in germ cells (2log scale)")
-    
+	.text("Gene expression in germ cells (²log scale)")
 
     // Add brushes
     brush_gte = d3.brushX()
 	.extent([[0, 0], [width, height]])
 	.on("brush", function(d) {
 	    // Set input range values accordingly
- 	    var cur_range = d3.brushSelection(this).map(x.invert);
-	    d3.select("#input_min_gte").attr("value", format(cur_range[0]));
-	    d3.select("#input_max_gte").attr("value", format(cur_range[1]));
-	    d3.select("#nofgenes_gte").text((F_gte_max[format(cur_range[1])]
-					     - F_gte_max[format(cur_range[0])]))
-	    ;
+ 	    var cur_domain_range = d3.brushSelection(this),
+		cur_range = cur_domain_range.map(x.invert),
+		dom_min_x = cur_domain_range[0],
+		dom_max_x = cur_domain_range[1],
+		min_x = cur_range[0],
+		max_x = cur_range[1]
+	    
+	    if (max_x >= 13) {
+
+		d3.select("#max_range_max_gte").attr("crossed-out",
+						      "true");
+		d3.select("#input_max_gte").attr("crossed-out",
+						      "true");
+
+	    } else {
+		
+		d3.select("#max_range_max_gte").attr("crossed-out",
+						      "false");
+		d3.select("#input_max_gte").attr("crossed-out",
+						      "false");		
+		d3.select("#max_range_max_gte").style("visibility", "initial");
+	    }
+
+	    
+	    line_gte_node = document.getElementById("line_gte");
+
+	    // Start building array with data points with x_min, x_max as outermost
+	    // elements, and all other datapoints within x_min and x_max inbetween
+	    var newAreaData = [{x_value: min_x,
+				expr_gte: y_gte.invert(findYatXbyBisection(
+				    dom_min_x,line_gte_node, 0))}],
+		// Get indices that correspond to indices of data points contained
+		// within min and max x values
+		start = Math.ceil(min_x/DATA_IV),
+		end = Math.floor(max_x/DATA_IV) + 1;
+	    newAreaData = newAreaData.concat(data_chart.slice(start, end))
+	    newAreaData = newAreaData.concat({x_value: max_x,
+				expr_gte: y_gte.invert(findYatXbyBisection(
+				    dom_max_x,line_gte_node, 0))})
+	    
+	    // d3.select("#area_gte").remove();
+	    
+	    // chart_gte.select("path")
+	    // 	.attr("class", "area")
+	    // 	.attr("id", "area_gte")
+	    // 	.attr("d", area_gte(newAreaData))
+	    // 	.attr("z-index", "2")
+	    chart_gte.select(".area")
+		.attr("d", area_gte(newAreaData))
+		// .attr("z-index", "2")
+
+	    
+
+	    d3.select("#input_min_gte").attr("value", format(min_x));
+	    d3.select("#input_max_gte").attr("value", format(max_x));
+	    d3.select("#nofgenes_gte").text((F_gte_max[format(max_x)]
+					     - F_gte_max[format(min_x)]));
+	    update_brush_handles_gte();
+	    
+
+
 	})
 	.on("end", update_venn);
+   
+
+    function update_brush_handles_gte() {
+	var s = d3.event.selection;
+	brush_handle_gte
+	    .attr("display", null)
+	    .attr("transform", function(d, i) {
+		return "translate(" + s[i] + "," + 0 + ")";
+	    });
+    };
+    
 
     // Append brush to chart_gte
-    brush_area_gte = chart_gte.append("g")
+    brush_node_gte = chart_gte.append("g")
 	.attr("class", "brush")
 	.attr("id", "brush_gte")
-	.call(brush_gte)
-	.call(brush_gte.move, [0, 1.6].map(x))
+	.call(brush_gte);
+	// .on("mousedown.brush", function () {
+	//     brush_node_gte.on("mouseup.brush", function () {
+	// 	clear
+	// .attr("z-index", "1");
+
+    var brushResizePath = function(d) {
+    	var e = +(d.type == "e"),
+    	    x = e ? 1: - 1,
+    	    y = height / 3;
+    	console.log(x, y);
+    	return ("M" + (.5 * x) + "," + y + "A6,6 0 0 " + e + " " + (6.5 * x) +
+    		"," + (y + 6) + "V" + (2 * y - 6) + "A6,6 0 0 " + e + " " +
+    		(.5 * x) + "," + (2 * y) + "Z" + "M" + (2.5 * x) + "," + (y + 8)
+    		+ "V" + (2 * y - 8) + "M" + (4.5 * x) + "," + (y + 8) + "V" +
+    		(2 * y - 8) + "M0,0" +"l0," + height);
+    };
+
+    brush_handle_gte = brush_node_gte.selectAll(".handle--custom")
+    	.data([{type: "w"}, {type: "e"}])
+    	.enter().append("path")
+    	.attr("class", "handle--custom")
+	// .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    	.attr("stroke", "#000")
+    	.attr("cursor", "ew-resize")
+    	.attr("d", brushResizePath)
+
+
+
+    brush_node_gte
+	.call(brush_gte.move, [0, 1.8].map(x))
 	.selectAll(".overlay")
-	.each(function(d) {d.type = "selection"; })
-    // .on("mousedown touchstart", null);
 
 
 
+// TCGAN---------------------------------------------------------------        
+    // // GTE---------------------------------------------------------------
+   //JAN---------------------------------------------------------------------------------
+// Jan expression
+    var chart_tcgan = d3.select('#expr_tcgan')
+	.attr("width", width + margin.left + margin.right)
+	.attr("height", height + margin.bottom + margin.top)
+	.append("g")
+	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    var y_tcgan = d3.scaleLinear()
+	.range([height, 0]);
 
+    var yAxis_tcgan = d3.axisLeft().scale(y_tcgan)
+	.tickSizeOuter(0);
 
-    // ///----------------------------
-    // chart_gte.append("g")
-    // 	.attr("class", "x axis")
-    // 	.attr("transform", "translate(0," + height+ ")")
-    // 	.call(xAxis);
+    var line_tcgan = d3.line()
+	.curve(d3.curveBasis)
+	.x(function(d) { return x(d.x_value); })
+	.y(function(d) { return y_tcgan(d.expr_tcgan); });
 
-    // chart_gte.append("g")
-    // 	.attr("class", "y axis")
-    // 	.call(yAxis_gte);
+    var area_tcgan = d3.area()
+	.curve(d3.curveBasis)
+	.x(function(d) { return x(d.x_value); })
+	.y0(height)
+	.y1(function(d) { return y_tcgan(d.expr_tcgan); });
+
+    max_tcgan = d3.max(data_chart, function(d) {return d.expr_tcgan; })
+
+    y_tcgan.domain([0, max_tcgan]);
+
+    yAxis_tcgan
+	.tickValues(d3.range(0, Math.ceil(max_tcgan/100)*100, 100).concat(
+	    Math.ceil(max_tcgan/100)*100 + 100))
+
     
-    // chart_gte.append("path")
-    // 	.attr("class", "area")
-    // 	.attr("id", "area_gte")
-    // 	.attr("d", area_gte(data_chart));
-
-    // chart_gte.append("path")
-    // 	.attr("class", "line")
-    // 	.attr("id", "line_gte")
-    // 	.attr("d", line_gte(data_chart));
-
-    // // // Add brushes
-    // // brush_jan = d3.brushX()
-    // // 	.extent([[0, 0], [width, height]])
-    // // 	.on("brush", function(d) {
-    // // 	    // Set input range values accordingly
-    // // 	    var cur_range = d3.brushSelection(this).map(x.invert);
-    // // 	    d3.select("#input_min_jan").attr("value", format(cur_range[0]));
-    // // 	    d3.select("#input_max_jan").attr("value", format(cur_range[1]));
-    // // 	    d3.select("#nofgenes_jan").text((F_jan_max[format(cur_range[1])]
-    // // 					     - F_jan_max[format(cur_range[0])]))
-    // // 	    ;
-    // // 	})
-    // // 	.on("end", update_venn);    
-    
-    // Add x Axis, line, and area to tcgan
     chart_tcgan.append("g")
 	.attr("class", "x axis")
 	.attr("transform", "translate(0," + height+ ")")
-	.call(xAxis);
+	.call(xAxis)
+        .selectAll("text")
+	.attr("y", 0)
+	.attr("x", "-2.2em")
+	.attr("dy", ".35em")
+	.attr("transform", "rotate(270)")
+	.style("text-anchor", "start");
 
+    chart_tcgan.append("g")
+	.attr("class", "ticks axis")
+	.attr("transform", "translate(0," + height + ")")
+    	.call(tickAxis)
+
+
+    // Add vertical gridlines
+    chart_tcgan.append("g")
+	.attr("class", "grid")
+	.attr("transform", "translate(0," + height + ")")
+	.call(make_x_gridlines() 
+	      .tickSize(-height)
+	      .tickFormat(""));
+
+    // Add horizontal gridlines
+    chart_tcgan.append("g")
+	.attr("class", "grid jan")
+	// .attr("transform", "translate("+width+",0)")
+	.call(make_y_gridlines(y_tcgan, yAxis_tcgan)
+	      .tickSize(-width)
+	      .tickFormat(""))
+    
+    // Add y axis
     chart_tcgan.append("g")
 	.attr("class", "y axis")
 	.call(yAxis_tcgan);
-    
+
+    // Add area
     chart_tcgan.append("path")
 	.attr("class", "area")
 	.attr("id", "area_tcgan")
-	.attr("d", area_tcgan(data_chart));
+	// .attr("d", area_tcgan(data_chart));
 
+
+    // Add line
     chart_tcgan.append("path")
 	.attr("class", "line")
 	.attr("id", "line_tcgan")
-	.attr("d", line_tcgan(data_chart));
-
-
-// GTE---------------------------------------------------------------        
+	.attr("d", line_tcgan(data_chart))
+	// .attr("data-legend", function(d) {
+	//     return "Gene expression in germ cells"}
+	//      )
+	// .attr("data-legend-icon", "line");
     
+    // Add title to axis
 
-    // brush_gte = d3.brushX()
-    // 	.extent([[0, 0], [width, height]])
-    // 	.on("end", update_venn)
-    // 	.on("brush", function(d) {
-    // 	    // Set input range values accordingly
-    // 	    var cur_range = d3.brushSelection(this).map(x.invert);
-    // 	    d3.select("#input_min_gte").attr("value", round(cur_range[0]));
-    // 	    d3.select("#input_max_gte").attr("value", round(cur_range[1]));}
-    // 	   )
-    // ;// (this))
-    // var x_min = x.invert(d3.brushSelection(this)[0]),
-    //     x_max = x.invert(d3.brushSelection(this)[1]);
-    // console.log(x_min, x_max);
+    chart_tcgan.append("text")
+	.attr("class", "ylabel")
+	.attr("text-anchor", "middle")
+	.attr("transform", "rotate(-90)")
+	.attr("y", 0 - margin.left)
+	.attr("x", 0 - (height / 2))
+	.attr("dy", "1em")
+	.text("Number of genes")
+
+    chart_tcgan.append("text")
+	.attr("class", "xlabel")
+	.attr("transform", "translate(" + (width/2) + " ," +
+	      (height + margin.top + 15) + ")")
+	.style("text-anchor", "middle")
+	.text("Gene expression (²log)")
 
 
+    // Add x-axis and ticks
+    chart_tcgan.append("g")
+	.attr("class", "x axis")
+	.attr("transform", "translate(0," + height+ ")")
+	.call(xAxis)
+        .selectAll("text")
+	.attr("y", 0)
+	.attr("x", "-2.2em")
+	.attr("dy", ".35em")
+	.attr("transform", "rotate(270)")
+	.style("text-anchor", "start");
+
+    chart_tcgan.append("g")
+	.attr("class", "ticks axis")
+	.attr("transform", "translate(0," + height + ")")
+    	.call(tickAxis)
+
+
+    // Add vertical gridlines
+    chart_tcgan.append("g")
+	.attr("class", "grid")
+	.attr("transform", "translate(0," + height + ")")
+	.call(make_x_gridlines() 
+	      .tickSize(-height)
+	      .tickFormat(""));
+
+    // Add horizontal gridlines
+    chart_tcgan.append("g")
+	.attr("class", "grid jan")
+	// .attr("transform", "translate("+width+",0)")
+	.call(make_y_gridlines(y_tcgan, yAxis_tcgan)
+	      .tickSize(-width)
+	      .tickFormat(""))
+    
+    // Add y axis
+    chart_tcgan.append("g")
+	.attr("class", "y axis")
+	.call(yAxis_tcgan);
+
+
+    // Add line
+    chart_tcgan.append("path")
+	.attr("class", "line")
+	.attr("id", "line_tcgan")
+	.attr("d", line_tcgan(data_chart))
+    
+    // Add title to axis
+
+    chart_tcgan.append("text")
+	.attr("class", "ylabel")
+	.attr("text-anchor", "middle")
+	.attr("transform", "rotate(-90)")
+	.attr("y", 0 - margin.left)
+	.attr("x", 0 - (height / 2))
+	.attr("dy", "1em")
+	.text("Number of genes")
+
+    // chart_tcgan.append("text")
+    // 	.attr("class", "xlabel")
+    // 	.attr("transform", "translate(" + (width/2) + " ," +
+    // 	      (height + margin.top + 20) + ")")
+    // 	.style("text-anchor", "middle")
+    // 	.text("Gene expression (²log)")
+
+    // Add chart title
+
+    chart_tcgan.append("text")
+	.attr("x", width/2)
+	.attr("y", 0 - (margin.top / 2))
+	.attr("text-anchor", "middle")
+	.style("font-size", "16px")
+	.style("text-decoration", "underline")
+	.text("Gene expression in germ cells (²log scale)")
+
+    // Add brushes
     brush_tcgan = d3.brushX()
 	.extent([[0, 0], [width, height]])
-	.on("end", update_venn)
 	.on("brush", function(d) {
 	    // Set input range values accordingly
- 	    var cur_range = d3.brushSelection(this).map(x.invert);
-	    d3.select("#input_min_tcgan").attr("value",
-					       round(cur_range[0]));
-	    d3.select("#input_max_tcgan").attr("value",
-					       round(cur_range[1]));}
-	   )
+ 	    var cur_domain_range = d3.brushSelection(this),
+		cur_range = cur_domain_range.map(x.invert),
+		dom_min_x = cur_domain_range[0],
+		dom_max_x = cur_domain_range[1],
+		min_x = cur_range[0],
+		max_x = cur_range[1]
+	    
+	    if (max_x >= 13) {
 
-    // chart_gte.append("g")
-    // 	.attr("class", "brush")
-    // 	.attr("id", "brush_gte")	
-    // 	.call(brush_gte)
-    // 	.call(brush_gte.move, [0, 1.8].map(x))
-    // 	.selectAll(".overlay")
-    // 	.each(function(d) {d.type = "selection"; })
-    // .on("mousedown touchstart", null);
+		d3.select("#max_range_max_tcgan").attr("crossed-out",
+						      "true");
+		d3.select("#input_max_tcgan").attr("crossed-out",
+						      "true");
+
+	    } else {
+		
+		d3.select("#max_range_max_tcgan").attr("crossed-out",
+						      "false");
+		d3.select("#input_max_tcgan").attr("crossed-out",
+						      "false");		
+		d3.select("#max_range_max_tcgan").style("visibility", "initial");
+	    }
+
+	    
+	    line_tcgan_node = document.getElementById("line_tcgan");
+
+	    // Start building array with data points with x_min, x_max as outermost
+	    // elements, and all other datapoints within x_min and x_max inbetween
+	    var newAreaData = [{x_value: min_x,
+				expr_tcgan: y_tcgan.invert(findYatXbyBisection(
+				    dom_min_x,line_tcgan_node, 0))}],
+		// Get indices that correspond to indices of data points contained
+		// within min and max x values
+		start = Math.ceil(min_x/DATA_IV),
+		end = Math.floor(max_x/DATA_IV) + 1;
+	    newAreaData = newAreaData.concat(data_chart.slice(start, end))
+	    newAreaData = newAreaData.concat({x_value: max_x,
+				expr_tcgan: y_tcgan.invert(findYatXbyBisection(
+				    dom_max_x,line_tcgan_node, 0))})
+	    
+	    // d3.select("#area_tcgan").remove();
+	    
+	    // chart_tcgan.select("path")
+	    // 	.attr("class", "area")
+	    // 	.attr("id", "area_tcgan")
+	    // 	.attr("d", area_tcgan(newAreaData))
+	    // 	.attr("z-index", "2")
+	    chart_tcgan.select(".area")
+		.attr("d", area_tcgan(newAreaData))
+		// .attr("z-index", "2")
+
+	    
+
+	    d3.select("#input_min_tcgan").attr("value", format(min_x));
+	    d3.select("#input_max_tcgan").attr("value", format(max_x));
+	    d3.select("#nofgenes_tcgan").text((F_tcgan_max[format(max_x)]
+					     - F_tcgan_max[format(min_x)]));
+	    update_brush_handles_tcgan();
+	    
+
+
+	})
+	.on("end", update_venn);
+   
+
+    function update_brush_handles_tcgan() {
+	var s = d3.event.selection;
+	brush_handle_tcgan
+	    .attr("display", null)
+	    .attr("transform", function(d, i) {
+		return "translate(" + s[i] + "," + 0 + ")";
+	    });
+    };
     
-    
-    chart_tcgan.append("g")
+
+    // Append brush to chart_tcgan
+    brush_node_tcgan = chart_tcgan.append("g")
 	.attr("class", "brush")
-	.attr("id", "brush_tcgan")	
-	.call(brush_tcgan)
+	.attr("id", "brush_tcgan")
+	.call(brush_tcgan);
+	// .on("mousedown.brush", function () {
+	//     brush_node_tcgan.on("mouseup.brush", function () {
+	// 	clear
+	// .attr("z-index", "1");
+
+    var brushResizePath = function(d) {
+    	var e = +(d.type == "e"),
+    	    x = e ? 1: - 1,
+    	    y = height / 3;
+    	console.log(x, y);
+    	return ("M" + (.5 * x) + "," + y + "A6,6 0 0 " + e + " " + (6.5 * x) +
+    		"," + (y + 6) + "V" + (2 * y - 6) + "A6,6 0 0 " + e + " " +
+    		(.5 * x) + "," + (2 * y) + "Z" + "M" + (2.5 * x) + "," + (y + 8)
+    		+ "V" + (2 * y - 8) + "M" + (4.5 * x) + "," + (y + 8) + "V" +
+    		(2 * y - 8) + "M0,0" +"l0," + height);
+    };
+
+    brush_handle_tcgan = brush_node_tcgan.selectAll(".handle--custom")
+    	.data([{type: "w"}, {type: "e"}])
+    	.enter().append("path")
+    	.attr("class", "handle--custom")
+	// .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    	.attr("stroke", "#000")
+    	.attr("cursor", "ew-resize")
+    	.attr("d", brushResizePath)
+
+
+
+    brush_node_tcgan
 	.call(brush_tcgan.move, [6.2, MAX_X_DOMAIN].map(x))
 	.selectAll(".overlay")
-	.each(function(d) {d.type = "selection"; })
-    // .on("mousedown touchstart", null);
-
-    function brushed() {
-	var cur_range = d3.brushSelection(this).map(x.invert);
-
-	d3.select("#input_min_jan").attr("value", round(cur_range[0]));
-	d3.select("#input_max_jan").attr("value", round(cur_range[1]));
-    };
+    
     
     // console.log(x_values);
 
@@ -931,13 +1271,13 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 
 
 
-    // brush_area_jan// make sure to select right div to allow moving, heck bubse
+    // brush_node_jan// make sure to select right div to allow moving, heck bubse
     // 	.select("#brush_jan").remove()
     // d3.select("#brush_jan").call(
     // chart_jan
     // 	.call(brush_jan)
 
-    // brush_area_jan// make sure to select right div to allow moving, heck bubse
+    // brush_node_jan// make sure to select right div to allow moving, heck bubse
     // 	.select("#brush_jan").remove()
     // d3.select("#brush_jan").call(
     // chart_jan
@@ -976,7 +1316,7 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	    window.sessionStorage.setItem('checkConds', checkConds);
 	};
 	       
-
+	// console.log("THIS IS DATA", data);
 	$.ajax({
 	    method: "GET",
 	    url: "requests/?conds="+checkConds,
@@ -1210,6 +1550,7 @@ d3.select("#downloadCurSel").on("click", function() {
 
 // Reset button to original settings
 d3.select("#reset_original").on("click", function() {
+
     d3.select("#brush_jan").call(brush_jan.move,
 				 [1.6, MAX_X_DOMAIN].map(x));
     d3.select("#brush_gte").call(brush_gte.move, [0, 1.8].map(x));
@@ -1237,3 +1578,104 @@ d3.selectAll("input").on("change", function() {
 //     let img = '<img src="' + imgsrc + '">';
 //     self.D3.select("#svgdataurl").html(img);
 // })
+
+
+// SAVE TO PNG
+d3.select("#saveVenn").on("click", function() {
+    console.log("HERE");
+
+    var svgs = document.querySelector("#rightbox svg");
+    console.log(svgs);
+
+    var svgData = new XMLSerializer().serializeToString( svgs );
+    
+    var canvas = document.createElement( "canvas" );
+    
+    canvas.width = 900;//d3.select("#venn").attr("width");
+    canvas.height = 900;//d3.select("#venn").attr("height");
+    
+    var ctx = canvas.getContext( "2d" );
+    
+    var img = document.createElement( "img" );
+    
+    img.setAttribute( "src", "data:image/svg+xml;base64," + btoa( svgData ) );    
+
+    img.onload = function() {
+	console.log('here as well');
+	
+
+	console.log('here as well now');
+	// window.open(img.src.replace('data:application/octet-stream'));
+	// window.href = canvas.toDataURL( "image/png" );
+	ctx.drawImage( img, 0, 0 );
+	
+	var link = document.createElement("a");
+	link.download = "venn_diagram";
+	link.href = canvas.toDataURL( "image/png" );
+	console.log(link);
+	document.body.appendChild(link);
+	link.click();
+	document.body.removeChild(link);
+	delete link;
+    
+    // Now is done
+    };
+			  
+
+    
+    
+    // console.log(img.src);
+})
+d3.selectAll(".clickables button")
+    .on("mouseover", function(d, i) {
+	console.log('working', this);
+	d3.select(this).style('text-decoration', 'underline')
+	    // .style("color", "black");
+    })
+    .on("mouseout", function(d, i) {
+	d3.selectAll(".clickables button")
+	    .style('text-decoration', 'initial')
+	    .style("color", "grey");	
+	//     .style("
+	// var node = d3.selectAll(this).transition();
+	// console.log(node);
+	// node.selectAll("button").style("fill-opacity", .2);
+	// node.selectAll("button").style('text-decoration', 'underline');
+    })
+
+
+d3.selectAll(".clickables")
+    .on("mouseover", function(d, i) {
+	console.log('working', this);
+	d3.selectAll(".clickables button").transition().duration(100)
+	    // .style('text-decoration', 'underline')
+	    .style("color", "black");
+    })
+    .on("mouseout", function(d, i) {
+	d3.selectAll(".clickables button").transition().duration(100)
+	    .style('text-decoration', 'initial')
+	    .style("color", "grey");	
+	//     .style("
+	// var node = d3.selectAll(this).transition();
+	// console.log(node);
+	// node.selectAll("button").style("fill-opacity", .2);
+	// node.selectAll("button").style('text-decoration', 'underline');
+    })
+
+d3.selectAll(".clickablesvenn")
+    .on("mouseover", function(d, i) {
+	console.log('working', this);
+	d3.selectAll(".clickablesvenn button").transition().duration(100)
+	    // .style('text-decoration', 'underline')
+	    .style("color", "black");
+    })
+    .on("mouseout", function(d, i) {
+	d3.selectAll(".clickablesvenn button").transition().duration(100)
+	    .style('text-decoration', 'initial')
+	    .style("color", "grey");	
+	//     .style("
+	// var node = d3.selectAll(this).transition();
+	// console.log(node);
+	// node.selectAll("button").style("fill-opacity", .2);
+	// node.selectAll("button").style('text-decoration', 'underline');
+    })
