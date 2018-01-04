@@ -15,13 +15,14 @@ footer {
 /* body { */
 /*     heigth: 0px; */
 /* } */
-
+body {
+    overflow: auto;
+}
 #bodywrapper {
     transform: scale(0.67);
     transform-origin: 0 0;
     width: 1800px;
     height: auto;
-    overflow: auto;
     /* overflow-y: auto; */
 }
 #leftbox {
