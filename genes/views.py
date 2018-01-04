@@ -47,7 +47,7 @@ def filter_gene_indices(request):
     # graph)
     bruggeman= Database.objects.get(name="bruggeman_et_al")
     conds = []
-    for t in conds_str.split('-'):
+    for t in conds_str.split('--'):
         t_splitted = t.split(',')
         conds.append((float(t_splitted[0]), float(t_splitted[1])))
     print(conds)
@@ -76,9 +76,10 @@ def generate_csv(request):
     conds_str = conds_str.replace('13', '20') # See above
     conds = []
     bruggeman= Database.objects.get(name="bruggeman_et_al")
-
-    for t in conds_str.split('-'):
+    print(t)
+    for t in conds_str.split('--'):
         t_splitted = t.split(',')
+        print(t_splitted)
         conds.append((float(t_splitted[0]), float(t_splitted[1])))
 
     # Filter bruggeman genes based on provided conds

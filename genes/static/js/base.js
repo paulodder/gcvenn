@@ -1,6 +1,6 @@
 //Fix empty selection upon 
 IV = 0.01;
-
+MAX_X_RANGE = 650; 
 MAX_X_DOMAIN = 13;
 DATA_IV = 0.2;
 X_IV = 0.4;
@@ -530,20 +530,23 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("text-anchor", "middle")
 	.style("font-size", "16px")
 	.style("text-decoration", "underline")
-	.text("Gene expression in germ cells (²log scale)")
+	.text("Max. gene expression in germ cells (²log scale)")
 
     // Add brushes
     brush_jan = d3.brushX()
 	.extent([[0, 0], [width, height]])
 	.on("brush", function(d) {
 	    // Set input range values accordingly
- 	    var cur_domain_range = d3.brushSelection(this),
-		cur_range = cur_domain_range.map(x.invert),
-		dom_min_x = cur_domain_range[0],
-		dom_max_x = cur_domain_range[1],
-		min_x = cur_range[0],
-		max_x = cur_range[1]
-	    
+ 	    var dom_cur_range = d3.brushSelection(this),
+		cur_range = dom_cur_range.map(x.invert),
+		dom_min_x = Math.max(Math.min(dom_cur_range[0], dom_cur_range[1]),
+				     0),
+		dom_max_x = Math.min(Math.max(dom_cur_range[0], dom_cur_range[1]),
+				     MAX_X_RANGE),
+		min_x = Math.max(Math.min(cur_range[0], cur_range[1]),
+				 0),
+		max_x = Math.min(Math.max(cur_range[0], cur_range[1]),
+				 13);
 	    if (max_x >= 13) {
 
 		d3.select("#max_range_max_jan").attr("crossed-out",
@@ -574,24 +577,18 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 		end = Math.floor(max_x/DATA_IV) + 1;
 	    newAreaData = newAreaData.concat(data_chart.slice(start, end))
 	    newAreaData = newAreaData.concat({x_value: max_x,
-				expr_jan: y_jan.invert(findYatXbyBisection(
-				    dom_max_x,line_jan_node, 0))})
-	    
-	    // d3.select("#area_jan").remove();
-	    
-	    // chart_jan.select("path")
-	    // 	.attr("class", "area")
-	    // 	.attr("id", "area_jan")
-	    // 	.attr("d", area_jan(newAreaData))
-	    // 	.attr("z-index", "2")
+					      expr_jan: y_jan.invert(findYatXbyBisection(
+						  dom_max_x,line_jan_node, 0))})
+
+	    // Draw new area
 	    chart_jan.select(".area")
 		.attr("d", area_jan(newAreaData))
-		// .attr("z-index", "2")
-
+	
 	    
+	    document.getElementById('input_min_jan').value = format(min_x);
+	    document.getElementById('input_max_jan').value = format(max_x);
 
-	    d3.select("#input_min_jan").attr("value", format(min_x));
-	    d3.select("#input_max_jan").attr("value", format(max_x));
+	    // Update number of genes selected
 	    d3.select("#nofgenes_jan").text((F_jan_max[format(max_x)]
 					     - F_jan_max[format(min_x)]));
 	    update_brush_handles_jan();
@@ -604,6 +601,9 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 
     function update_brush_handles_jan() {
 	var s = d3.event.selection;
+	s[0] = Math.max(s[0], 0);
+	s[1] = Math.min(s[1], MAX_X_RANGE);
+
 	brush_handle_jan
 	    .attr("display", null)
 	    .attr("transform", function(d, i) {
@@ -834,20 +834,23 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("text-anchor", "middle")
 	.style("font-size", "16px")
 	.style("text-decoration", "underline")
-	.text("Gene expression in germ cells (²log scale)")
+	.text("Max. gene expression in 49 non-cancerous somatic tissues (²log scale)")
 
     // Add brushes
     brush_gte = d3.brushX()
 	.extent([[0, 0], [width, height]])
 	.on("brush", function(d) {
 	    // Set input range values accordingly
- 	    var cur_domain_range = d3.brushSelection(this),
-		cur_range = cur_domain_range.map(x.invert),
-		dom_min_x = cur_domain_range[0],
-		dom_max_x = cur_domain_range[1],
-		min_x = cur_range[0],
-		max_x = cur_range[1]
-	    
+ 	    var dom_cur_range = d3.brushSelection(this),
+		cur_range = dom_cur_range.map(x.invert),
+		dom_min_x = Math.max(Math.min(dom_cur_range[0], dom_cur_range[1]),
+				     0),
+		dom_max_x = Math.min(Math.max(dom_cur_range[0], dom_cur_range[1]),
+				     MAX_X_RANGE),
+		min_x = Math.max(Math.min(cur_range[0], cur_range[1]),
+				 0),
+		max_x = Math.min(Math.max(cur_range[0], cur_range[1]),
+				 13);
 	    if (max_x >= 13) {
 
 		d3.select("#max_range_max_gte").attr("crossed-out",
@@ -878,24 +881,18 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 		end = Math.floor(max_x/DATA_IV) + 1;
 	    newAreaData = newAreaData.concat(data_chart.slice(start, end))
 	    newAreaData = newAreaData.concat({x_value: max_x,
-				expr_gte: y_gte.invert(findYatXbyBisection(
-				    dom_max_x,line_gte_node, 0))})
-	    
-	    // d3.select("#area_gte").remove();
-	    
-	    // chart_gte.select("path")
-	    // 	.attr("class", "area")
-	    // 	.attr("id", "area_gte")
-	    // 	.attr("d", area_gte(newAreaData))
-	    // 	.attr("z-index", "2")
+					      expr_gte: y_gte.invert(findYatXbyBisection(
+						  dom_max_x,line_gte_node, 0))})
+
+	    // Draw new area
 	    chart_gte.select(".area")
 		.attr("d", area_gte(newAreaData))
-		// .attr("z-index", "2")
-
+	
 	    
+	    document.getElementById('input_min_gte').value = format(min_x);
+	    document.getElementById('input_max_gte').value = format(max_x);
 
-	    d3.select("#input_min_gte").attr("value", format(min_x));
-	    d3.select("#input_max_gte").attr("value", format(max_x));
+	    // Update number of genes selected
 	    d3.select("#nofgenes_gte").text((F_gte_max[format(max_x)]
 					     - F_gte_max[format(min_x)]));
 	    update_brush_handles_gte();
@@ -908,12 +905,16 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 
     function update_brush_handles_gte() {
 	var s = d3.event.selection;
+	s[0] = Math.max(s[0], 0);
+	s[1] = Math.min(s[1], MAX_X_RANGE);
+
 	brush_handle_gte
 	    .attr("display", null)
 	    .attr("transform", function(d, i) {
 		return "translate(" + s[i] + "," + 0 + ")";
 	    });
     };
+
     
 
     // Append brush to chart_gte
@@ -1137,20 +1138,23 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("text-anchor", "middle")
 	.style("font-size", "16px")
 	.style("text-decoration", "underline")
-	.text("Gene expression in germ cells (²log scale)")
+	.text("Max. gene expression in 33 tumor types (²log scale)")
 
     // Add brushes
     brush_tcgan = d3.brushX()
 	.extent([[0, 0], [width, height]])
 	.on("brush", function(d) {
 	    // Set input range values accordingly
- 	    var cur_domain_range = d3.brushSelection(this),
-		cur_range = cur_domain_range.map(x.invert),
-		dom_min_x = cur_domain_range[0],
-		dom_max_x = cur_domain_range[1],
-		min_x = cur_range[0],
-		max_x = cur_range[1]
-	    
+ 	    var dom_cur_range = d3.brushSelection(this),
+		cur_range = dom_cur_range.map(x.invert),
+		dom_min_x = Math.max(Math.min(dom_cur_range[0], dom_cur_range[1]),
+				     0),
+		dom_max_x = Math.min(Math.max(dom_cur_range[0], dom_cur_range[1]),
+				     MAX_X_RANGE),
+		min_x = Math.max(Math.min(cur_range[0], cur_range[1]),
+				 0),
+		max_x = Math.min(Math.max(cur_range[0], cur_range[1]),
+				 13);
 	    if (max_x >= 13) {
 
 		d3.select("#max_range_max_tcgan").attr("crossed-out",
@@ -1181,24 +1185,18 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 		end = Math.floor(max_x/DATA_IV) + 1;
 	    newAreaData = newAreaData.concat(data_chart.slice(start, end))
 	    newAreaData = newAreaData.concat({x_value: max_x,
-				expr_tcgan: y_tcgan.invert(findYatXbyBisection(
-				    dom_max_x,line_tcgan_node, 0))})
-	    
-	    // d3.select("#area_tcgan").remove();
-	    
-	    // chart_tcgan.select("path")
-	    // 	.attr("class", "area")
-	    // 	.attr("id", "area_tcgan")
-	    // 	.attr("d", area_tcgan(newAreaData))
-	    // 	.attr("z-index", "2")
+					      expr_tcgan: y_tcgan.invert(findYatXbyBisection(
+						  dom_max_x,line_tcgan_node, 0))})
+
+	    // Draw new area
 	    chart_tcgan.select(".area")
 		.attr("d", area_tcgan(newAreaData))
-		// .attr("z-index", "2")
-
+	
 	    
+	    document.getElementById('input_min_tcgan').value = format(min_x);
+	    document.getElementById('input_max_tcgan').value = format(max_x);
 
-	    d3.select("#input_min_tcgan").attr("value", format(min_x));
-	    d3.select("#input_max_tcgan").attr("value", format(max_x));
+	    // Update number of genes selected
 	    d3.select("#nofgenes_tcgan").text((F_tcgan_max[format(max_x)]
 					     - F_tcgan_max[format(min_x)]));
 	    update_brush_handles_tcgan();
@@ -1211,6 +1209,9 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 
     function update_brush_handles_tcgan() {
 	var s = d3.event.selection;
+	s[0] = Math.max(s[0], 0);
+	s[1] = Math.min(s[1], MAX_X_RANGE);
+
 	brush_handle_tcgan
 	    .attr("display", null)
 	    .attr("transform", function(d, i) {
@@ -1306,8 +1307,8 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	    return; // In case not all are defined, yet, no need to update
 	    // venn diagram as has already been drawn at top
 	}
-	var checkConds = (vals_jan[0]+","+vals_jan[1]+"-"+vals_gte[0]
-			  +","+vals_gte[1]+"-"+vals_tcgan[0]+","+vals_tcgan[1]);
+	var checkConds = (vals_jan[0]+","+vals_jan[1]+"--"+vals_gte[0]
+			  +","+vals_gte[1]+"--"+vals_tcgan[0]+","+vals_tcgan[1]);
 	if (window.sessionStorage.getItem('checkConds') == checkConds) {
 	    // Means nothing has changed, probably due to reset button being pressed
 	    console.log("stop");
@@ -1539,10 +1540,10 @@ d3.select("#downloadCurSel").on("click", function() {
     }
     $.ajax({
 	method: "GET",
-	url: "download/?conds="+vals_jan[0]+","+vals_jan[1]+"-"+vals_gte[0]+","+vals_gte[1]+"-"+vals_tcgan[0]+","+vals_tcgan[1],
+	url: "download/?conds="+vals_jan[0]+","+vals_jan[1]+"--"+vals_gte[0]+","+vals_gte[1]+"--"+vals_tcgan[0]+","+vals_tcgan[1],
 	async: false,
 	success: function() {
-	    window.location = "download/?conds="+vals_jan[0]+","+vals_jan[1]+"-"+vals_gte[0]+","+vals_gte[1]+"-"+vals_tcgan[0]+","+vals_tcgan[1];
+	    window.location = "download/?conds="+vals_jan[0]+","+vals_jan[1]+"--"+vals_gte[0]+","+vals_gte[1]+"--"+vals_tcgan[0]+","+vals_tcgan[1]; // 
 	}
     });
 });
@@ -1557,18 +1558,35 @@ d3.select("#reset_original").on("click", function() {
     d3.select("#brush_tcgan").call(brush_tcgan.move, [6.2, MAX_X_DOMAIN].map(x));
 })
 
-
-d3.selectAll("input").on("change", function() {
-    console.log('changing input')
-    var ranges = d3.selectAll(".input_range").nodes().map(
-    	function(e) {
-    	    return parseFloat(e.value);
-    	});
+// Add listeners to changes in input
+d3.selectAll(".input_range_jan").on("change", function() {
+    var newRange = d3.selectAll(".input_range_jan").nodes().map(
+	function (e) {
+	    return round(e.value);
+	});
     d3.select("#brush_jan").call(brush_jan.move,
-				 [ranges[0], ranges[1]].map(x));
-    // d3.select("#brush_gte").call(brush_gte.move, [0, 1.8].map(x));
-    // d3.select("#brush_tcgan").call(brush_tcgan.move, [6.2, MAX_X_DOMAIN].map(x));
+				 newRange.map(x).sort());
 })
+
+d3.selectAll(".input_range_gte").on("change", function() {
+    var newRange = d3.selectAll(".input_range_gte").nodes().map(
+	function (e) {
+	    return round(e.value);
+	});
+    d3.select("#brush_gte").call(brush_gte.move,
+				 newRange.map(x).sort());
+})
+
+d3.selectAll(".input_range_tcgan").on("change", function() {
+    var newRange = d3.selectAll(".input_range_tcgan").nodes().map(
+	function (e) {
+	    return round(e.value);
+	});
+    d3.select("#brush_tcgan").call(brush_tcgan.move,
+				   newRange.map(x).sort());
+})
+
+
 // d3.select("#saveVenn").on("click", function() {
 //     var html = this.svg
 //         .attr("version", 1.1)
