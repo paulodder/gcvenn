@@ -101,9 +101,9 @@ F_tcgan_max = {};
     setSize = {};
     // Default setsize
     setSize['1'] = 756;
-    setSize['4'] = 26;
-    setSize['6'] = 123;
-    setSize['7'] = 3;
+    setSize['4'] = 24;
+    setSize['6'] = 120;
+    setSize['7'] = 21;
     // Update name of bruggeman circle with variable (n= x)
     setAbbrevs['1'][0] = setAbbrevs['1'][0] + ' (n = ' + setSize['1'] + ')'
     var sets = [
