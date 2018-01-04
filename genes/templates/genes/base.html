@@ -1,61 +1,72 @@
 <!DOCTYPE html>
 {% load static %}
 <body>
-  <div id="main">
-    <div id="leftbox">
-      <h3>Insert Title</h3>
-  <p>This website is a supplement to a paper entitled "Massive expression of germ cell specific genes is a hallmark of cancer and a potential target for novel treatment development". The interactive Venn diagram allows researchers to visualize their own cut-off criteria in the used datasets. [en hier nog wat uitleg misschien, mag jij schrijven]
-  </p>
-      <div class="clickables" id="dlreset">
-      <button id="reset_original">Reset selection criteria</button>
-      <button id="downloadCurSel">Download current selection (CSV) </button>
-	
-      </div>
-      
-      <div id="div_chart_jan" class="chart_div">
-	<svg class="chart" id="expr_jan"></svg>
-	<div class="chart_status">
-	  <p>Selected <span class="nofgenes" id="nofgenes_jan"></span> genes whose max. expression in germ cells is above <input class="input_range_jan" id="input_min_jan" type="number" step="0.01" min="0" max="13">&nbsp;</p><p id="max_range_max_jan">and below <input class="input_range_jan" id="input_max_jan" type="number" step="0.01" min="0" max="13"></p>
-	</div>
-      </div>
+  <div id="bodywrapper">
+    <div id="main">
+      <div id="leftbox">
+	<h3>Insert Title</h3>
+	<p>
+	  Cancer/testis (CT) genes or antigens entail a subset of genes highly expressed in cancerous tissues, but whose expression is normally contained within germ cells. Under physiological conditions these genes are solely expressed in immunologically privileged sites, preventing development of tolerance by our immune system. Indeed, these features render CT genes as ideal therapeutic targets in cancer therapy.
+	</p>
+	<p>
+	  However, identification of CT genes has been based on gene expression in whole testicular tissue, rather than germ cells specifically. Indeed, we believe the relative lack of success of CT-gene based therapies is attributed to insufficient criteria.
+	</p>
+	This website is a supplement to a paper entitled "Massive expression of germ cell specific genes is a hallmark of cancer and a potential target for novel treatment development". The interactive Venn diagram allows researchers to visualize their own cut-off criteria in the used datasets. [en hier nog wat uitleg misschien, mag jij schrijven]
+</p>
+<div class="clickables" id="dlreset">
+  <button id="reset_original">Reset selection criteria</button>
+  <button id="downloadCurSel">Download current selection (CSV) </button>
+  
+</div>
 
-      <div id="div_chart_gte" class="chart_div">
-	<svg class="chart" id="expr_gte"></svg>
-	<div class="chart_status">
-	  <p>Selected <span class="nofgenes" id="nofgenes_gte"></span> genes whose max. expression in somatic tissues is above
-	    <input class="input_range_gte" id="input_min_gte" type="number" step="0.01" min="0" max="13">&nbsp;</p><p id="max_range_max_gte">
-	    and below
-	    <input class="input_range_gte" id="input_max_gte" type="number" step="0.01" min="0" max="13">
-	  </p>
-	</div>
+<div id="div_chart_jan" class="chart_div">
+  <svg class="chart" id="expr_jan"></svg>
+  <div class="chart_status">
+    <p>Selected <span class="nofgenes" id="nofgenes_jan"></span> genes whose max. expression in germ cells is above <input class="input_range_jan" id="input_min_jan" type="number" step="0.01" min="0" max="13">&nbsp;</p><p id="max_range_max_jan">and below <input class="input_range_jan" id="input_max_jan" type="number" step="0.01" min="0" max="13"></p>
+  </div>
+</div>
 
-      </div>
-      
-
-      <div id="div_chart_tcgan" class="chart_div">
-	<svg class="chart" id="expr_tcgan"></svg>
-	<div class="chart_status">
-	  <p>Selected <span class="nofgenes" id="nofgenes_tcgan"></span> genes whose max. expression in tumors is above <input class="input_range_tcgan" id="input_min_tcgan" type="number" step="0.01" min="0" max="13">&nbsp;</p><p id="max_range_max_tcgan">and below <input class="input_range_tcgan" id="input_max_tcgan" type="number" step="0.01" min="0" max="13"></p>
-	</div>
-
-      </div>
-      
-    </div>
-    
-    
-    <div id="rightbox">
-      
-      
-      <div id="venn" class="clickablesvenn">
-      <button id="saveVenn">Export as png</button>
-	
-      </div>
-      
-    </div>
-
-    
+<div id="div_chart_gte" class="chart_div">
+  <svg class="chart" id="expr_gte"></svg>
+  <div class="chart_status">
+    <p>Selected <span class="nofgenes" id="nofgenes_gte"></span> genes whose max. expression in somatic tissues is above
+      <input class="input_range_gte" id="input_min_gte" type="number" step="0.01" min="0" max="13">&nbsp;</p><p id="max_range_max_gte">
+      and below
+      <input class="input_range_gte" id="input_max_gte" type="number" step="0.01" min="0" max="13">
+    </p>
   </div>
 
+</div>
+
+
+<div id="div_chart_tcgan" class="chart_div">
+  <svg class="chart" id="expr_tcgan"></svg>
+  <div class="chart_status">
+    <p>Selected <span class="nofgenes" id="nofgenes_tcgan"></span> genes whose max. expression in tumors is above <input class="input_range_tcgan" id="input_min_tcgan" type="number" step="0.01" min="0" max="13">&nbsp;</p><p id="max_range_max_tcgan">and below <input class="input_range_tcgan" id="input_max_tcgan" type="number" step="0.01" min="0" max="13"></p>
+  </div>
+
+</div>
+
+</div>
+
+
+<div id="rightbox">
+  
+  
+  <div id="venn" class="clickables">
+    <button id="saveVenn">Export as png</button>
+    
+  </div>
+  
+</div>
+
+
+</div>
+
+<footer>
+  <p>Developed by: <a id="paullink" href="http://www.paul-lodder.nl">Paul Lodder</a></p>
+</footer>
+</div>
 </body>
 <head>
   <!-- Load venn library DONT FORGET TO INCLUDE REFERENCE -->
@@ -90,86 +101,4 @@
 
 
   
-  <!--     <div id="introbox"> -->
-  <!--       <h3>Appendix: Figure x</h3> -->
-  <!--       <p>blablablablablablablablablabal</p> -->
-  <!--       <p>blablablablablablablablablabal</p> -->
-  <!--       <p>blablablablablablablablablabal</p> -->
-  <!--       <p>blablablablablablablablablabal</p> -->
-  <!--       <p>blablablablablablablablablabal</p> -->
-  <!--       <p>blablablablablablablablablabal</p> -->
-
-  <!--       <div class="charts"> -->
-  <!--       </div> -->
-  <!--     </div>           -->
-
-
-    
-
-<!--     <div id="rightbox"> -->
-      
-	
-<!-- 	<\!-- <svg id="vennsvg"></svg> -\-> -->
-<!--       </div> -->
-<!--     </div> -->
-
-
-<!-- </div> -->
-<!-- </div> -->
-
-
-<!-- </body> -->
-<!--   <\!-- <div id="leftbox"> -\-> -->
-<!--   <\!-- <svg class="chart" id="expr_jan"></svg> -\-> -->
-<!--   <\!-- <svg class="chart" id="expr_gte"></svg> -\-> -->
-<!--   <\!-- <svg class="chart" id="expr_tcgan"></svg> -\-> -->
-<!-- <\!-- <\\!-- </div> -\\-> -\-> -->
-
-<!-- <body> -->
-<!--   <div id="introbox"> -->
-<!--     <h3>Appendix: Figure x</h3> -->
-<!--     <p>blablablablablablablablablabal</p> -->
-<!--     <p>blablablablablablablablablabal</p> -->
-<!--     <p>blablablablablablablablablabal</p> -->
-<!--     <p>blablablablablablablablablabal</p> -->
-<!--     <p>blablablablablablablablablabal</p> -->
-<!--     <p>blablablablablablablablablabal</p> -->
-
-<!--     <div class="charts"> -->
-<!--       <button id="reset_original">Reset selection criteria to original values</button> -->
-      
-<!--       <div id="div_chart_jan" class="chart_div"> -->
-<!-- 	<svg class="chart" id="expr_jan"></svg> -->
-<!-- 	<div class="chart_status"> -->
-<!-- 	  <p>Selected <span class="nofgenes" id="nofgenes_jan"></span> genes whose expression in germ cells is above <input class="input_range" id="input_min_jan" type="number" step="0.01" min="0" max="13">&nbsp;</p><p id="max_range_max_jan">and below <input class="input_range" id="input_max_jan" type="number" step="0.01" min="0" max="13"></p> -->
-<!-- 	</div> -->
-
-<!--       </div> -->
-<!--       <div class="chart_div"> -->
-<!-- 	<svg class="chart" id="expr_gte"></svg> -->
-<!--       </div> -->
-<!--       <div class="chart_div"> -->
-<!-- 	<svg class="chart" id="expr_tcgan"></svg> -->
-<!--       </div> -->
-<!--     </div> -->
-<!--   </div>           -->
-
-
   
-
-<!--   <div id="rightbox"> -->
-    
-<!--     <div id="venn"> -->
-<!--       <button id="downloadCurSel">Download current selection (CSV) </button> -->
-<!--       <button id="saveVenn">Export as png</button> -->
-      
-<!--       <\!-- <svg id="vennsvg"></svg> -\-> -->
-<!--     </div> -->
-<!--   </div> -->
-
-
-<!-- </div> -->
-<!-- </div> -->
-
-
-<!-- </body> -->

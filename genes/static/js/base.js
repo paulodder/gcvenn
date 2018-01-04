@@ -158,7 +158,7 @@ F_tcgan_max = {};
     vennDiv.datum(sets).call(vennChart);
 
     // add a tooltip
-    var tooltip = d3.select("body").append("div")
+    var tooltip = d3.select("#bodywrapper").append("div")
 	.attr("class", "venntooltip");
 
     // add listeners to all the groups to display tooltip on mouseover
@@ -179,9 +179,10 @@ F_tcgan_max = {};
 		.style("stroke-opacity", 1);
 	})
 
-	.on("mousemove", function() {
-            tooltip.style("left", (d3.event.pageX) + "px")
-		.style("top", (d3.event.pageY - 28 ) + "px");
+    .on("mousemove", function() { // Insert mult with 1.5 cause everything is
+	// scaled
+            tooltip.style("left", 1.5*(d3.event.pageX) + "px")
+		.style("top",  1.5*(d3.event.pageY - 28 ) + "px");
 	})
     
 	.on("mouseout", function(d, i) {
@@ -241,6 +242,7 @@ F_tcgan_max = {};
     // GRAPHS-----------------------------------------------------------------------
     // Start drawing of graphs
     var margin = {top: 30, left: 50, right: 50, bottom: 50}
+    // var margin = {top: 20, left: 33, right: 33, bottom: 33}
     var width = 750 - margin.left - margin.right,
 	height = 250 - margin.top - margin.bottom;
 
@@ -1516,55 +1518,55 @@ F_tcgan_max = {};
 	
 	
     })
-    d3.selectAll(".clickables button")
-	.on("mouseover", function(d, i) {
-	    console.log('working', this);
-	    d3.select(this).style('text-decoration', 'underline')
-	    // .style("color", "black");
-	})
-	.on("mouseout", function(d, i) {
-	    d3.selectAll(".clickables button")
-		.style('text-decoration', 'initial')
-		.style("color", "grey");	
-	    //     .style("
-	    // var node = d3.selectAll(this).transition();
-	    // console.log(node);
-	    // node.selectAll("button").style("fill-opacity", .2);
-	    // node.selectAll("button").style('text-decoration', 'underline');
-	})
+    // d3.selectAll(".clickables button")
+    // 	.on("mouseover", function(d, i) {
+    // 	    console.log('working', this);
+    // 	    d3.select(this).style('text-decoration', 'underline')
+    // 	    // .style("color", "black");
+    // 	})
+    // 	.on("mouseout", function(d, i) {
+    // 	    d3.selectAll(".clickables button")
+    // 		.style('text-decoration', 'initial')
+    // 		.style("color", "grey");	
+    // 	    //     .style("
+    // 	    // var node = d3.selectAll(this).transition();
+    // 	    // console.log(node);
+    // 	    // node.selectAll("button").style("fill-opacity", .2);
+    // 	    // node.selectAll("button").style('text-decoration', 'underline');
+    // 	})
 
 
-    d3.selectAll(".clickables")
-	.on("mouseover", function(d, i) {
-	    d3.selectAll(".clickables button").transition().duration(100)
-	    // .style('text-decoration', 'underline')
-		.style("color", "black");
-	})
-	.on("mouseout", function(d, i) {
-	    d3.selectAll(".clickables button").transition().duration(100)
-		.style('text-decoration', 'initial')
-		.style("color", "grey");	
-	    //     .style("
-	    // var node = d3.selectAll(this).transition();
-	    // console.log(node);
-	    // node.selectAll("button").style("fill-opacity", .2);
-	    // node.selectAll("button").style('text-decoration', 'underline');
-	})
+    // d3.selectAll(".clickables")
+    // 	.on("mouseover", function(d, i) {
+    // 	    d3.selectAll(".clickables button").transition().duration(100)
+    // 	    // .style('text-decoration', 'underline')
+    // 		.style("color", "black");
+    // 	})
+    // 	.on("mouseout", function(d, i) {
+    // 	    d3.selectAll(".clickables button").transition().duration(100)
+    // 		.style('text-decoration', 'initial')
+    // 		.style("color", "grey");	
+    // 	    //     .style("
+    // 	    // var node = d3.selectAll(this).transition();
+    // 	    // console.log(node);
+    // 	    // node.selectAll("button").style("fill-opacity", .2);
+    // 	    // node.selectAll("button").style('text-decoration', 'underline');
+    // 	})
 
-    d3.selectAll(".clickablesvenn")
-	.on("mouseover", function(d, i) {
-	    d3.selectAll(".clickablesvenn button").transition().duration(100)
-	    // .style('text-decoration', 'underline')
-		.style("color", "black");
-	})
-	.on("mouseout", function(d, i) {
-	    d3.selectAll(".clickablesvenn button").transition().duration(100)
-		.style('text-decoration', 'initial')
-		.style("color", "grey");	
-	    //     .style("
-	    // var node = d3.selectAll(this).transition();
-	    // console.log(node);
-	    // node.selectAll("button").style("fill-opacity", .2);
-	    // node.selectAll("button").style('text-decoration', 'underline');
-	})
+    // d3.selectAll(".clickablesvenn")
+    // 	.on("mouseover", function(d, i) {
+    // 	    d3.selectAll(".clickablesvenn button").transition().duration(100)
+    // 	    // .style('text-decoration', 'underline')
+    // 		.style("color", "black");
+    // 	})
+    // 	.on("mouseout", function(d, i) {
+    // 	    d3.selectAll(".clickablesvenn button").transition().duration(100)
+    // 		.style('text-decoration', 'initial')
+    // 		.style("color", "grey");	
+    // 	    //     .style("
+    // 	    // var node = d3.selectAll(this).transition();
+    // 	    // console.log(node);
+    // 	    // node.selectAll("button").style("fill-opacity", .2);
+    // 	    // node.selectAll("button").style('text-decoration', 'underline');
+    // 	})
 

@@ -1,25 +1,28 @@
+footer {
+    /* position: absolute; */
+    margin-bottom: 0;
+    width: 100%;
+    heigth: 60px;
+    overflow-y: hidden;
+}
 @variables color {
     jan: #D3CC44;
     gte: #76C25B;
     tcgan: #B35A5A;
 }
-	     
 
-	     
 
-/* Chart axes labels */
-/* #venn { */
-/*     position: relative; */
-/*     top: 0px; */
-/*     left: 0px; */
-/* } */
-/* #downloadCurSel { */
-/*     float: left, top; */
+/* body { */
+/*     heigth: 0px; */
 /* } */
 
-body {
-    width: 2000px;
+#bodywrapper {
+    transform: scale(0.67);
+    transform-origin: 0 0;
+    width: 1800px;
+    height: auto;
     overflow: auto;
+    /* overflow-y: auto; */
 }
 #leftbox {
     float: left;
@@ -49,7 +52,7 @@ body {
     opacity: 0.5;
 }
 .ylabel {
-    font-size: 11pt;
+    font-size: 8pt;
 }
 
 input {
@@ -116,6 +119,17 @@ CD
 .nofgenes  {
     text-decoration: underline;
 }
+
+#nofgenes_jan  {
+    text-decoration-color: #D3CC44;
+}
+#nofgenes_gte  {
+    text-decoration-color: #76C25B;
+}
+#nofgenes_tcgan  {
+    text-decoration-color: #B35A5A;
+}
+
     
 .axis line {
     fill: none;
@@ -203,20 +217,6 @@ path line {
     float: left;
 }
 
-/* .chart text { */
-/*     fill: white; */
-/*     font: 10px sans-serif; */
-/*     text-anchor: end; */
-/* } */
-
-}
-#brush_jan rect.selection {
-    /* fill: #D5CA49; */
-    
-}
-#brush_gte rect.selection {
-    /* fill: #78C160; */
-}
     
 #rightbox {
     align: right;
@@ -264,12 +264,32 @@ body {
     position: relative;
     float: left;
 }
-
-button {
+.clickables button {
     background: none;
     border: none;
     color: grey;
     font-size: 12.5pt;
     cursor: pointer;
+    text-decoration: underline;
+    -o-transition: .1s;
+    -ms-transition; .1s;
+    -moz-transition:.1s;
+    -webkit-transition: .1s;
+    transition: .1s;
+
     
 }
+/* .clickables:hover button { */
+/*     color: black; */
+/* } */
+
+
+button:hover {
+    color: black;
+}
+
+#paullink {
+    color: black;
+    text-decoration: underline;
+}
+			 
