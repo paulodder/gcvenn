@@ -39,7 +39,6 @@ def base(request):
 
 
 def filter_gene_indices(request):
-    print("Here, request taken")
     conds_str = request.GET["conds"]
     conds_str = conds_str.replace('13', '20') # In case 13 is present, accepts any
     # gene with expression lower than 20 (max possible gene expression in
@@ -50,7 +49,6 @@ def filter_gene_indices(request):
     for t in conds_str.split('--'):
         t_splitted = t.split(',')
         conds.append((float(t_splitted[0]), float(t_splitted[1])))
-    print(conds)
 
     # Filter bruggeman genes based on provided conds
     brug = set(g.id for g in bruggeman.genes.all() if
@@ -66,7 +64,6 @@ def filter_gene_indices(request):
     brug_wang = brug.intersection(wang)
     brug_ct_db = brug.intersection(ct_db)
     # Return in format sizes: 1, 4, 6, 7
-    print(len(brug))
     return HttpResponse(json.dumps([len(brug), len(brug_ct_db), len(brug_wang), 
                                     len(brug_wang.intersection(brug_ct_db))]))
 
@@ -76,10 +73,8 @@ def generate_csv(request):
     conds_str = conds_str.replace('13', '20') # See above
     conds = []
     bruggeman= Database.objects.get(name="bruggeman_et_al")
-    print(t)
     for t in conds_str.split('--'):
         t_splitted = t.split(',')
-        print(t_splitted)
         conds.append((float(t_splitted[0]), float(t_splitted[1])))
 
     # Filter bruggeman genes based on provided conds
