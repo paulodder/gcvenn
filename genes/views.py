@@ -8,7 +8,7 @@ import json
 import csv
 from collections import Counter
 from datetime import datetime
-
+import pytz
 
 class Echo:
     """An object that implements just the write method of the file-like
@@ -90,14 +90,16 @@ def generate_csv(request):
         name_row_dic = json.load(f)
 
     writer = csv.writer(pseudo_buffer)
-    
+
+    # timezone info
+    ams = pytz.timezone("Europe/Amsterdam")
     # First write header
     # writer.writerow(name_row_dic['HEADER'])
     response = StreamingHttpResponse((writer.writerow(name_row_dic[gene]) for
                                       gene in ['HEADER'] + brug_sorted),
                                      content_type='text/csv')
     response['Content-Disposition'] = ("attachment;filename=Bruggeman_GC_genes_%s.csv" %
-                                       datetime.now().strftime("%b_%d_%Y_%H.%M").lower())
+                                       datetime.now(ams).strftime("%G_%m_%d_%H:%M").lower())
     return response
     
 

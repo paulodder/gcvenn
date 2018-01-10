@@ -53,11 +53,11 @@ body {
     opacity: 0.5;
 }
 .ylabel {
-    font-size: 8pt;
+    font-size: 9pt;
 }
 
 input {
-    width: 50px;
+    width: 48px;
 }
 
 .xlabel {
@@ -197,25 +197,29 @@ path line {
     fill:  #B45A5A;
     stroke-width: 0;
 }
-#leftbox div {
-    float: left;
-}
+/* #rightbox div { */
+/*     float: left; */
+/* } */
 
-#leftbox .chart_div {
+#rightbox .chart_div {
     border: 1px outset;
     border-radius: 10px;
-    float: left;
+    float: right;
     display: grid;
     /* grid-grap: 10px; */
 }
 
 .chart_status {
-    margin-top: -15px;
+    margin-top: -30px;
     margin-left: 50px;
+}
+.chart_status text {
 }
 
 .chart_status p {
     float: left;
+    font-size: 11pt;
+
 }
 
     
