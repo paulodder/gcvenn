@@ -301,3 +301,8 @@ button:hover {
     text-decoration: none;
     font-style : italic;
 }
+
+#venndisclaimer p {
+    color: grey;
+    text-align: center;
+}
