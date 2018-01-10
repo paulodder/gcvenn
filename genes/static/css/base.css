@@ -42,7 +42,7 @@ body {
 
 
 .chart_div {
-    float: left;
+    float: right;
     width: 750px;
 }
 
@@ -305,4 +305,8 @@ button:hover {
 #venndisclaimer p {
     color: grey;
     text-align: center;
+}
+
+#chartwrapper {
+    width: 770px;
 }
