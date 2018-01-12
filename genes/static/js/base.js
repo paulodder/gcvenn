@@ -61,48 +61,66 @@ function format(n) {
 
 // Initialize hashtable that for each value reports number of genes with jan_expr
 // below that value
-function Ftype_jan_max(d) {
-    d.nofgenes = +d.nofgenes;
+function Ftype_max(d) {
+    d.nofgenes_jan = +d.nofgenes_jan;
+    d.nofgenes_gte = +d.nofgenes_gte;
+    d.nofgenes_tcgan = +d.nofgenes_tcgan;
+
     d.interval = d.interval;
     return d;
 }
 
-function Ftype_gte_max(d) {
-    d.nofgenes = +d.nofgenes;
-    d.interval = d.interval;
-    return d;
-}
+// function Ftype_jan_max(d) {
+//     d.nofgenes = +d.nofgenes;
+//     d.interval = d.interval;
+//     return d;
+// }
 
-function Ftype_tcgan_max(d) {
-    d.nofgenes = +d.nofgenes;
-    d.interval = d.interval;
-    return d;
-}
+// function Ftype_gte_max(d) {
+//     d.nofgenes = +d.nofgenes;
+//     d.interval = d.interval;
+//     return d;
+// }
+
+// function Ftype_tcgan_max(d) {
+//     d.nofgenes = +d.nofgenes;
+//     d.interval = d.interval;
+//     return d;
+// }
 
 // Read tsv and load dictionaries that map expression value to number of genes
 // with less than or equal expression values (easily compute number of genes
 // selected by doing F(expr_max) - F(expr_min)
 F_jan_max= {};
-
-d3.tsv("/static/cumulative_jan_max.txt", Ftype_jan_max, function(error, cumul_data) {
-    cumul_data.forEach(function(d) {
-	F_jan_max[d.interval] = d.nofgenes;
-    })
-})
 F_gte_max = {};
-
-d3.tsv("/static/cumulative_gte_max.txt", Ftype_gte_max, function(error, cumul_data) {
-    cumul_data.forEach(function(d) {
-	F_gte_max[d.interval] = d.nofgenes;
-    })
-})
 F_tcgan_max = {};
-
-d3.tsv("/static/cumulative_tcgan_max.txt", Ftype_tcgan_max, function(error, cumul_data) {
+d3.tsv("/static/cumulative_max.txt", Ftype_max, function(error, cumul_data) {
     cumul_data.forEach(function(d) {
-	F_tcgan_max[d.interval] = d.nofgenes;
+	F_jan_max[d.interval] = d.nofgenes_jan;
+	F_gte_max[d.interval] = d.nofgenes_gte;
+	F_tcgan_max[d.interval] = d.nofgenes_tcgan;
     })
 })
+
+// d3.tsv("/static/cumulative_jan_max.txt", Ftype_jan_max, function(error, cumul_data) {
+//     cumul_data.forEach(function(d) {
+// 	F_jan_max[d.interval] = d.nofgenes;
+//     })
+// })
+// F_gte_max = {};
+
+// d3.tsv("/static/cumulative_gte_max.txt", Ftype_gte_max, function(error, cumul_data) {
+//     cumul_data.forEach(function(d) {
+// 	F_gte_max[d.interval] = d.nofgenes;
+//     })
+// })
+// F_tcgan_max = {};
+
+// d3.tsv("/static/cumulative_tcgan_max.txt", Ftype_tcgan_max, function(error, cumul_data) {
+//     cumul_data.forEach(function(d) {
+// 	F_tcgan_max[d.interval] = d.nofgenes;
+//     })
+// })
 
 // Initialize dictionary that maps stringified integers to
 // lists with full set names so venn diagram can be drawn
@@ -119,9 +137,10 @@ setAbbrevs['7'] = [setAbbrevs['1'], setAbbrevs['2'], setAbbrevs['3']];
 setSize = {};
 // Default setsize
 setSize['1'] = 756;
-setSize['4'] = 24;
-setSize['6'] = 120;
-setSize['7'] = 21;
+setSize['4'] = 25;
+setSize['6'] = 123;
+setSize['7'] = 22;
+
 // Update name of bruggeman circle with variable (n= x)
 setAbbrevs['1'][0] = setAbbrevs['1'][0] + ' (n = ' + setSize['1'] + ')'
 var sets = [
@@ -161,9 +180,6 @@ var setSizeAbbrevs = {[sn1] : setSize['1'],
 		      [sn5]: 146 - setSize['7'],
 		     }
 
-// var vennSVG = d3.select("#vennsvg")
-//     .attr("width", vennWidth + vennMargin.left + vennMargin.right)
-//     .attr("height", vennHeight + vennMargin.bottom + vennMargin.top)
 
 var vennDiv = d3.select("#venn")
     .attr("width", vennWidth + vennMargin.left + vennMargin.right)
@@ -214,47 +230,7 @@ vennDiv.selectAll("g")
 
 
 
-// //Add tooltips
-// var tooltip = d3.select("body").append("div")
-//     .attr("class", "venntooltip");
 
-// // Add listners to all the groups to display tooltip on mouseover
-// vennDiv.selectAll("g")
-//     .on("mouseover", function(d, i) {
-// 	// Sort areas relative to current item
-// 	// console.log(d.size, i);
-// 	venn.sortAreas(vennDiv, d);
-// 	// Display tooltip with current size
-// 	tooltip.transition().duration(400).style("opacity", 0.9);
-// 	tooltip.attr("text", d.size+" genes.");
-// 	//the current path
-// 	var selection = d3.select(this).transition("tooltip")
-// 	    .duration(400).select("path")
-// 	    .style("stroke-width", 3)
-// 	    .style("fill-opacity", d.sets.length == 1 ? .4: .1)
-// 	    .style("stroke-opacity", 1);
-// 	console.log(tooltip.attr("text"));
-//     })
-//     .on("mousemove", function() {
-// 	tooltip.style("left", (d3.event.pageX) + "px")
-// 	    .style("top", (d3.event.pageY - 28) + "px");
-// 	console.log(d3.event.pageY, d3.event.pageX);
-//     })
-//     .on("mouseout", function(d, i) {
-// 	tooltip.transition().duration(400).style("opacity", 0.9);
-// 	var selection = d3.select(this).transition("tooltip").duration(400);
-// 	selection.select("path")
-// 	    .style("stroke-width", 0)
-// 	    .style("fill-opacity", d.sets.length == 1? .25 : .0)
-// 	    .style("stroke-opacity", 0);
-//     });
-// vennDiv.datum(sets).call(venn.VennDiagram());
-// Initial visualization of graph with default values, from hereon altered by
-// update_venn
-// var chart = venn.VennDiagram();
-// d3.select("#venn")
-//     .datum(sets)
-//     .call(chart);
 
 
 // GRAPHS-----------------------------------------------------------------------
@@ -270,13 +246,6 @@ var x = d3.scaleLinear()
     .range([0, width]);
 
 // Set y-scales for specific graphs (ranges are same for all)
-
-
-
-// .range([height, 0]);    
-// .domain([0, d3.max(data)])
-
-// Grab charts 
 
 // Define axes Possibly make 2 axis, one for right number of ticks and one for
 // right value display
@@ -301,42 +270,6 @@ function make_y_gridlines(scale, yaxis) {
 	.tickValues(yaxis.tickValues());
 }
 
-
-// [0.4, 0.8, 1.2, 1.6, 2, 2.4, 2.8, 3.2, 3.6, 4, 4.4, 4.8, 5.2,
-// 5.6, 6, 6.4, 6.8, 7.2, 7.6, 8, 8.4, 8.8, 9.2, 9.6, 10, 10.4,
-// 10.8, 11.2, 11.6, 12, 12.4, 12.8, MAX_X_DOMAIN])
-// .selectAll("text")
-// .attr("dy", ".35em")
-// .attr("transform", "rotate(90)")
-// .style("text-anchor", "start")
-// Chart-specific axes
-
-
-//GTE
-
-// var chart_gte = d3.select('#expr_gte')
-//     .attr("width", width + margin.left + margin.right)
-//     .attr("height", height + margin.bottom+margin.top)
-//     .append("g")
-//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-// var y_gte = d3.scaleLinear()
-//     .range([height, 0]);
-
-// var yAxis_gte = d3.axisLeft().scale(y_gte)
-//     .ticks(5);
-
-// var line_gte = d3.line()
-//     .curve(d3.curveBasis)
-//     .x(function(d) { return x(d.x_value); })
-//     .y(function(d) { return y_gte(d.expr_gte); });
-
-
-// var area_gte = d3.area()
-//     .curve(d3.curveBasis)    
-//     .x(function(d) { return x(d.x_value); })
-//     .y0(height)
-//     .y1(function(d) { return y_gte(d.expr_gte); });
 
 
 
@@ -366,7 +299,9 @@ var area_tcgan = d3.area()
 
 
 // var data_chart;
-d3.tsv(expr_tsv_path, type, function(error, data_chart) {
+// "{% static 'js/expr_02.tsv' %}";
+d3.tsv('static/js/expr_02.tsv', type, function(error, data_chart) {
+// d3.tsv(expr_tsv_path, type, function(error, data_chart) {
     
     // Set domain of x-scale (invariant to all graphs)
     x.domain([0, d3.max(data_chart, function(d) {return d.x_value; })]);
@@ -433,7 +368,6 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
     // Add horizontal gridlines
     chart_jan.append("g")
 	.attr("class", "grid jan")
-    // .attr("transform", "translate("+width+",0)")
 	.call(make_y_gridlines(y_jan, yAxis_jan)
 	      .tickSize(-width)
 	      .tickFormat(""))
@@ -447,7 +381,6 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
     chart_jan.append("path")
 	.attr("class", "area")
 	.attr("id", "area_jan")
-    // .attr("d", area_jan(data_chart));
 
 
     // Add line
@@ -455,11 +388,7 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("class", "line")
 	.attr("id", "line_jan")
 	.attr("d", line_jan(data_chart))
-    // .attr("data-legend", function(d) {
-    //     return "Gene expression in germ cells"}
-    //      )
-    // .attr("data-legend-icon", "line");
-    
+
     // Add title to axis
 
     chart_jan.append("text")
@@ -470,14 +399,6 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("x", 0 - (height / 2))
 	.attr("dy", "1em")
 	.text("Number of genes")
-
-    // chart_jan.append("text")
-    // 	.attr("class", "xlabel")
-    // 	.attr("transform", "translate(" + (width/2) + " ," +
-    // 	      (height + margin.top + 15) + ")")
-    // 	.style("text-anchor", "middle")
-    // 	.text("Gene expression (²log)")
-
 
     // Add x-axis and ticks
     chart_jan.append("g")
@@ -536,12 +457,6 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("dy", "1em")
 	.text("Number of genes")
     
-    // chart_jan.append("text")
-    // 	.attr("class", "xlabel")
-    // 	.attr("transform", "translate(" + (width/2) + " ," +
-    // 	      (height + margin.top + 20) + ")")
-    // 	.style("text-anchor", "middle")
-    // 	.text("Gene expression (²log)")
 
     // Add chart title
 
@@ -689,7 +604,7 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 		brush_jan.move, d3.brushSelection(this.parentNode))});
 
 
-	    
+    
     //GTE---------------------------------------------------------------
     //JAN---------------------------------------------------------------------------------
     // Jan expression
@@ -775,12 +690,6 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("class", "line")
 	.attr("id", "line_gte")
 	.attr("d", line_gte(data_chart))
-    // .attr("data-legend", function(d) {
-    //     return "Gene expression in germ cells"}
-    //      )
-    // .attr("data-legend-icon", "line");
-    
-    // Add title to axis
 
     chart_gte.append("text")
 	.attr("class", "ylabel")
@@ -790,13 +699,6 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("x", 0 - (height / 2))
 	.attr("dy", "1em")
 	.text("Number of genes")
-
-    // chart_gte.append("text")
-    // 	.attr("class", "xlabel")
-    // 	.attr("transform", "translate(" + (width/2) + " ," +
-    // 	      (height + margin.top + 15) + ")")
-    // 	.style("text-anchor", "middle")
-    // 	.text("Gene expression (²log)")
 
 
     // Add x-axis and ticks
@@ -855,13 +757,6 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("x", 0 - (height / 2))
 	.attr("dy", "1em")
 	.text("Number of genes")
-
-    // chart_gte.append("text")
-    // 	.attr("class", "xlabel")
-    // 	.attr("transform", "translate(" + (width/2) + " ," +
-    // 	      (height + margin.top + 20) + ")")
-    // 	.style("text-anchor", "middle")
-    // 	.text("Gene expression (²log)")
 
     // Add chart title
 
@@ -1010,7 +905,7 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 
 
     //TCGAN-------------------------------------------------------------
-        //JAN---------------------------------------------------------------------------------
+    //JAN---------------------------------------------------------------------------------
     // Jan expression
     var chart_tcgan = d3.select('#expr_tcgan')
 	.attr("width", width + margin.left + margin.right)
@@ -1110,13 +1005,6 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("dy", "1em")
 	.text("Number of genes")
 
-    // chart_tcgan.append("text")
-    // 	.attr("class", "xlabel")
-    // 	.attr("transform", "translate(" + (width/2) + " ," +
-    // 	      (height + margin.top + 15) + ")")
-    // 	.style("text-anchor", "middle")
-    // 	.text("Gene expression (²log)")
-
 
     // Add x-axis and ticks
     chart_tcgan.append("g")
@@ -1175,12 +1063,7 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	.attr("dy", "1em")
 	.text("Number of genes")
 
-    // chart_tcgan.append("text")
-    // 	.attr("class", "xlabel")
-    // 	.attr("transform", "translate(" + (width/2) + " ," +
-    // 	      (height + margin.top + 20) + ")")
-    // 	.style("text-anchor", "middle")
-    // 	.text("Gene expression (²log)")
+
 
     // Add chart title
 
@@ -1211,16 +1094,16 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	    if (max_x >= 13) {
 
 		d3.select("#max_range_max_tcgan").attr("crossed-out",
-						     "true");
+						       "true");
 		d3.select("#input_max_tcgan").attr("crossed-out",
-						 "true");
+						   "true");
 
 	    } else {
 		
 		d3.select("#max_range_max_tcgan").attr("crossed-out",
-						     "false");
+						       "false");
 		d3.select("#input_max_tcgan").attr("crossed-out",
-						 "false");		
+						   "false");		
 		d3.select("#max_range_max_tcgan").style("visibility", "initial");
 	    }
 
@@ -1256,8 +1139,8 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 		d3.select("#percgenes_tcgan").text( ' (' + format(nofgenes/PERC_DIV) + '%)');
 		return nofgenes;
 	    })
-		
-		
+	    
+	    
 	    update_brush_handles_tcgan();
 	    
 	    
@@ -1271,8 +1154,8 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 		    function(e) {
 			return round(e.value); });
 		d3.select("#brush_tcgan").call(brush_tcgan.move,
-					     curRange.map(x)
-					    )};
+					       curRange.map(x)
+					      )};
 	    
 	    update_venn();
 	});
@@ -1356,22 +1239,6 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
     	return vals.join(',')
     };
     
-    // 	var brush_selection = d3.brushSelection(d3.select(brush_id));
-    // 	if (brush_selection == null) {
-    // 	    console.log("IS THERE ANYONE HERE?");
-    // 	    if (d3.select(brush_id + '.brush path.handle--custom').attr(
-    // 		"transform").includes(MAX_X_DOMAIN)) {
-    // 		var vals = filter_range([13, 13]);
-    // 	    } else {
-    // 		var vals = filter_range([0, 0]);
-    // 	    }
-    // 	} else {
-    // 	    var vals = filter_range(d3.brushSelection(d3.select(brush_id).node()).map(
-    // 		x.invert).map(round));
-    // 	}
-    // 	return vals.join(',');
-    // };
-    
 
     //Place in ready to prevent execution before initalization of all brushes
     function update_venn(set_sizes) {
@@ -1380,29 +1247,11 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 	    return;
 	};
 	
-	
-
-	// var extent_jan=  d3.brushSelection(this).map(x.invert);
- 	// console.log(extent_jan);
-	// var extent_jan = d3.brushSelection(this),
-
 	var vals_jan = get_or_retrieve_range("#brush_jan"),
 	    vals_gte = get_or_retrieve_range("#brush_gte"),
 	    vals_tcgan = get_or_retrieve_range("#brush_tcgan");
 	var checkConds = vals_jan + '--' + vals_gte + '--' + vals_tcgan;
-	// var checkConds = (vals_jan[0]+","+vals_jan[1]+"--"+vals_gte[0]
-	// 		      +","+vals_gte[1]+"--"+vals_tcgan[0]+","+vals_tcgan[1]);
-	console.log(checkConds);
-
-	// If default criteria, alter name 
-	// if (window.sessionStorage.getItem('checkConds') == '1.6,13--0,1.8--6.2,13'){
-	//     setAbbrevs['1'] = ["Current selection\nBruggeman et al."];
-	    
-	// } else {
-	//     setAbbrevs['1'] = ["Current selection"];
-	// };
-	// setAbbrevs['1'][0] = setAbbrevs['1'][0] + ' (n = ' + setSize['1'] + ')'
-	    
+	
 	if (window.sessionStorage.getItem('checkConds') == checkConds) {
 	    // Means nothing has changed, probably due to reset button being pressed
 	    return;
@@ -1433,19 +1282,6 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 		}
 
 		
-		// if (checkConds ==  '1.6,13--0,1.8--6.2,13') {
-		//     setAbbrevs['1'][0] = setAbbrevs['1'][0].replace(
-		// 	setAbbrevs['1'][0].slice(0, setAbbrevs['1'][0].indexOf('ion') + 3),
-		// 	"Current selection Bruggeman et al.")
-		// } else if (setAbbrevs['1'][0].includes('Bruggeman')) {
-		//     setAbbrevs['1'][0] = setAbbrevs['1'][0].replace(
-		// 	setAbbrevs['1'][0].slice(0, setAbbrevs['1'][0].indexOf('al.')+ 3),
-		// 	"Current selection")
-
-		// }
-		// setAbbrevs['1'][0] += '(n = ' + set_sizes[0] + ')';
-   
-		// }
 		setAbbrevs['1'][0] = setAbbrevs['1'][0].replace(setAbbrevs['1'][0].slice(
 		    setAbbrevs['1'][0].indexOf('(')),
 								'(n = ' + set_sizes[0] + ')');
@@ -1461,15 +1297,6 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 		    {sets: setAbbrevs['3'], size: 1019},
 		    {sets: setAbbrevs['5'], size: 146},
 		];
-		// Cannot directly link to setAbbrevs in dict belowfor some
-		// reason
-		// var sn1 = setAbbrevs['1'].join(','),
-		//     sn2 = setAbbrevs['2'].join(','),
-		//     sn3 = setAbbrevs['3'].join(','),
-		//     sn4 = setAbbrevs['4'].join(','),
-		//     sn5 = setAbbrevs['5'].join(','),
-		//     sn6 = setAbbrevs['6'].join(','),
-		//     sn7 = setAbbrevs['7'].join(',');
 
 
 		var setSizeAbbrevs = {[setAbbrevs['1'].join(',')] : set_sizes[0],
@@ -1482,51 +1309,6 @@ d3.tsv(expr_tsv_path, type, function(error, data_chart) {
 				     }
 		
 		vennDiv.datum(newsets).call(venn.VennDiagram(setSizeAbbrevs));
-		
-		
-
-		// add a tooltip
-		// var tooltip = d3.select("#venn").append("div")
-		//     .attr("class", "tooltip");
-
-		// // add listeners to all the groups to display tooltip on mouseover
-		// vennDiv.selectAll("g")
-		//     .on("mouseover", function(d, i) {
-		// 	// sort all the areas relative to the current item
-		// 	venn.sortAreas(vennDiv, d);
-
-		// 	// Display a tooltip with the current size
-		// 	tooltip.transition().duration(400).style("opacity", .9);
-		// 	tooltip.text(d.size + " genes");
-		// 	// highlight the current path
-		// 	var selection = d3.select(this).transition("tooltip").duration(400);
-		// 	selection.select("path")
-		// 	    .style("stroke-width", 3)
-		// 	    .style("fill-opacity", d.sets.length == 1 ? .4 : .1)
-		// 	    .style("stroke-opacity", 1);
-		//     })
-
-		//     .on("mousemove", function() {
-		// 	console.log(d3.event.pageY, d3.event.pageX);
-		// 	tooltip.style("left", (d3.event.pageX) + 'px')
-		// 	    .style("top", (d3.event.pageY) - 28 + "px");
-		// 	console.log(tooltip.style('left'), tooltip.style('top')); 
-		//     })
-		
-		//     .on("mouseout", function(d, i) {
-		// 	tooltip.transition().duration(400).style("opacity", 0);
-		// 	var selection = d3.select(this).transition("tooltip").duration(400);
-		// 	selection.select("path")
-		// 	    .style("stroke-width", 0)
-		// 	    .style("fill-opacity", d.sets.length == 1 ? .25 : .0)
-		// 	    .style("stroke-opacity", 0);
-		//     });
-
-
-
-
-
-
 	    }
 	})
 	
@@ -1621,16 +1403,6 @@ d3.selectAll(".input_range_tcgan").on("change", function() {
 })
 
 
-// d3.select("#saveVenn").on("click", function() {
-//     var html = this.svg
-//         .attr("version", 1.1)
-//         .attr("xmlns", "http://www.w3.org/2000/svg")
-//         .node().parentNode.innerHTML;
-//     let imgsrc = 'data:image/svg+xml;base64,' + btoa(html);
-//     let img = '<img src="' + imgsrc + '">';
-//     self.D3.select("#svgdataurl").html(img);
-// })
-
 // SAVE TO PNG
 d3.select("#saveVenn").on("click", function() {
     var today = new Date();
@@ -1689,136 +1461,13 @@ d3.select("#saveVenn").on("click", function() {
     
     
 })
-// d3.selectAll(".clickables button")
-// 	.on("mouseover", function(d, i) {
-// 	    console.log('working', this);
-// 	    d3.select(this).style('text-decoration', 'underline')
-// 	    // .style("color", "black");
-// 	})
-// 	.on("mouseout", function(d, i) {
-// 	    d3.selectAll(".clickables button")
-// 		.style('text-decoration', 'initial')
-// 		.style("color", "grey");	
-// 	    //     .style("
-// 	    // var node = d3.selectAll(this).transition();
-// 	    // console.log(node);
-// 	    // node.selectAll("button").style("fill-opacity", .2);
-// 	    // node.selectAll("button").style('text-decoration', 'underline');
-// 	})
 
 
-// d3.selectAll(".clickables")
-// 	.on("mouseover", function(d, i) {
-// 	    d3.selectAll(".clickables button").transition().duration(100)
-// 	    // .style('text-decoration', 'underline')
-// 		.style("color", "black");
-// 	})
-// 	.on("mouseout", function(d, i) {
-// 	    d3.selectAll(".clickables button").transition().duration(100)
-// 		.style('text-decoration', 'initial')
-// 		.style("color", "grey");	
-// 	    //     .style("
-// 	    // var node = d3.selectAll(this).transition();
-// 	    // console.log(node);
-// 	    // node.selectAll("button").style("fill-opacity", .2);
-// 	    // node.selectAll("button").style('text-decoration', 'underline');
-// 	})
-
-// d3.selectAll(".clickablesvenn")
-// 	.on("mouseover", function(d, i) {
-// 	    d3.selectAll(".clickablesvenn button").transition().duration(100)
-// 	    // .style('text-decoration', 'underline')
-// 		.style("color", "black");
-// 	})
-// 	.on("mouseout", function(d, i) {
-// 	    d3.selectAll(".clickablesvenn button").transition().duration(100)
-// 		.style('text-decoration', 'initial')
-// 		.style("color", "grey");	
-// 	    //     .style("
-// 	    // var node = d3.selectAll(this).transition();
-// 	    // console.log(node);
-// 	    // node.selectAll("button").style("fill-opacity", .2);
-// 	    // node.selectAll("button").style('text-decoration', 'underline');
-// 	})
-
-
-    d3.select("#venn svg").append("text")
-	.attr("class", "vennlabel")
-	.style("text-anchor", "end")
-	// .attr("X", 0)
-	// .attr("y", 0)
-	.attr("transform", "translate(895, 895)")
-	.text("Venn diagram retrieved from the interactive web-based application by Bruggeman et al. 2018")
-
-// function writeDownloadLink(){
-//     var html = d3.select("svg")
-//         .attr("title", "svg_title")
-//         .attr("version", 1.1)
-//         .attr("xmlns", "http://www.w3.org/2000/svg")
-//         .node().parentNode.innerHTML;
-
-//     d3.select(this)
-//         .attr("href-lang", "image/svg+xml")
-//         .attr("href", "data:image/svg+xml;base64,\n" + btoa(html))
-//         .on("mousedown", function(){
-// 	    if(event.button != 2){
-// 		d3.select(this)
-// 		    .attr("href", null)
-// 		    .html("Use right click");
-// 	    }
-// 	})
-//         .on("mouseout", function(){
-// 	    d3.select(this)
-// 	        .html("Download");
-// 	});
-// };
-// d3.select("#saveVenn").on("click", function() {
-//     var today = new Date();
-//     var dd = today.getDate();
-//     var mm = today.getMonth()+1; 
-//     var yyyy = today.getFullYear();
-
-//     if(dd<10) {
-// 	dd = '0'+dd
-//     }
-//     if(mm<10) {
-// 	mm = '0'+mm
-//     }
-
-//     var stamp = yyyy + ':' + mm + ':' + dd;
-    
-//     var svgs = document.querySelector("#venn svg");
-
-//     var svgData = new XMLSerializer().serializeToString( svgs );
-    
-//     var canvas = document.createElement( "canvas" );
-    
-//     canvas.width = 900;//d3.select("#venn").attr("width");
-//     canvas.height = 900;//d3.select("#venn").attr("height");
-    
-//     var ctx = canvas.getContext( "2d" );
-    
-//     var img = document.createElement( "img" );
-    
-//     img.setAttribute( "src", "data:image/svg+xml;base64," + btoa( svgData ) );    
-
-//     img.onload = function() {
-// 	// window.open(img.src.replace('data:application/octet-stream'));
-// 	// window.href = canvas.toDataURL( "image/png" );
-// 	ctx.drawImage( img, 0, 0 );
-	
-// 	var link = document.createElement("a");
-// 	link.download = "Bruggeman_Venn_" + stamp;
-// 	link.href = canvas.toDataURL( "image/png" );
-// 	document.body.appendChild(link);
-// 	link.click();
-// 	document.body.removeChild(link);
-// 	delete link;
-	
-// 	// Now is done
-//     };
-    
-
-    
-    
-// })
+d3.select("#venn svg").append("text")
+    .attr("class", "vennlabel")
+    .style("text-anchor", "end")
+// .attr("X", 0)
+// .attr("y", 0)
+    .attr("transform", "translate(895, 895)")
+    .text("Venn diagram retrieved from the interactive web-based application by Bruggeman et al. 2018")
+    // var expr_tsv_path = 

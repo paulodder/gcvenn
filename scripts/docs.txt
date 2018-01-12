@@ -1,0 +1,12 @@
+- write_expressions_tsv.py
+Writes tsv files in format with x_value, and number of genes whose Jan expr lies within this range, and idem for GTE and TCGAN. Needed to plot the charts basically
+
+- write_cumul_files.py
+Writes tsv files that for each type of expression gives a range of
+x_values with interval IV defined in top of file, for every x_value
+it has a nofgenes attribute which specifies the number of genes with
+that expression value or lower. This allows for rapid computation of
+number of genes currently selected by taking the value of the brushes
+XMAX and XMIN value and subtracting the number of genes whose
+expression is less than XMIN from # of genes whose expression is less
+than XMAX

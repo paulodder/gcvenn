@@ -1,4 +1,4 @@
-# python manage.py write_gene_rows --script-args filedest
+# python manage.py write_gene_rows --
 # Writes a json-formatted text file that can be accessed by download function to
 # quickly write the pre-formatted rows upon request
 import django
@@ -48,38 +48,81 @@ def run(*args):
                                              (wang_member[g],
                                               ct_db_member[g]))]
     out_dic = dict()
-    
-    with open('csv_files/bruggeman_genes_full_data.csv', 'r') as f:
+
+    with open('csv_files/bruggeman_genes_full_data_neww.csv', 'r') as f:
         lines = csv.reader(f)
-        for i, header_line in enumerate(lines):
-            header_line = [w.strip() for w in (header_line[:5] +
-                                               ['Mentioned by Wang et al 2016',
-                                              'Mentioned in CT database'] +
-                                               header_line[5:])]
-            out_dic['HEADER'] = header_line
+
+        #     header_line = [w.strip() for w in (header_line[:5] +
+        #                                        ['Mentioned by Wang et al 2016',
+        #                                         'Mentioned in CT database'] +
+        for i, headerline in enumerate(lines):
+            # headerline = header_line[0].split(',')
+            # print(header_line)
+            headerline[0] = headerline[0].strip('"')
+            headerline[-1] = headerline[-1].strip('"')
+            
+            out_dic['HEADER'] = headerline
             if i == 0:# Do one loop just to get header
                 break
-        for i, oldline in enumerate(lines):
+        for i, new_line in enumerate(lines):
+            newline = new_line[0].split(',')
             if i % 500 == 0:
                 print("%s new genes added" % i)
-            line_stripped = [n.strip() for n in oldline]
-            newline = (oldline[:5] + [wang_member[line_stripped[0]],
-                                      ct_db_member[line_stripped[0]]] + oldline[5:])
+                # line_stripped = [n.strip() for n in oldline]
+                # newline = (oldline[:5] + [wang_member[line_stripped[0]],
+                #                           ct_db_member[line_stripped[0]]] + oldline[5:])
 
             out_dic[newline[0]] = newline # Append using gene name as key
+
             if i == 8000:
                 # write to temporary file to prevent working memory overload
                 with open('tempstor', 'w') as temp:
                     temp.write(json.dumps(out_dic))
-                out_dic = dict()
-        
+                    out_dic = dict()
+                    
         
         # out_dic[g.rev_ann] = [g.rev_ann, g.Jan_expr, g.GTE_expr, g.TCGAN_expr,
         #                  wang_member[g], ct_db_member[g]]
         # writer.writerow([g.rev_ann, g.Jan_expr, g.GTE_expr, g.TCGAN_expr,
         #                  wang_member[g], ct_db_member[g]])
-    with open(args[0], 'w') as f:
+    with open('full_gene_rows.txt', 'w') as f:
         out_dic.update(json.load(open('tempstor', 'r')))
         f.write(json.dumps(out_dic))
+
+    
+
+    
+    # with open('csv_files/bruggeman_genes_full_data.csv', 'r') as f:
+    #     lines = csv.reader(f)
+    #     for i, header_line in enumerate(lines):
+    #         header_line = [w.strip() for w in (header_line[:5] +
+    #                                            ['Mentioned by Wang et al 2016',
+    #                                           'Mentioned in CT database'] +
+    #                                            header_line[5:])]
+    #         out_dic['HEADER'] = header_line
+    #         if i == 0:# Do one loop just to get header
+    #             break
+    #     for i, oldline in enumerate(lines):
+    #         if i % 500 == 0:
+    #             print("%s new genes added" % i)
+    #         line_stripped = [n.strip() for n in oldline]
+    #         newline = (oldline[:5] + [wang_member[line_stripped[0]],
+    #                                   ct_db_member[line_stripped[0]]] + oldline[5:])
+
+    #         out_dic[newline[0]] = newline # Append using gene name as key
+    #         if i == 8000:
+    #             # write to temporary file to prevent working memory overload
+    #             with open('tempstor', 'w') as temp:
+    #                 temp.write(json.dumps(out_dic))
+    #             out_dic = dict()
+        
+        
+    #     # out_dic[g.rev_ann] = [g.rev_ann, g.Jan_expr, g.GTE_expr, g.TCGAN_expr,
+    #     #                  wang_member[g], ct_db_member[g]]
+    #     # writer.writerow([g.rev_ann, g.Jan_expr, g.GTE_expr, g.TCGAN_expr,
+    #     #                  wang_member[g], ct_db_member[g]])
+    # with open(args[0], 'w') as f:
+    #     out_dic.update(json.load(open('tempstor', 'r')))
+    #     f.write(json.dumps(out_dic))
 
     

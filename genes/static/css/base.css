@@ -227,7 +227,7 @@ path line {
     align: right;
     position: relative;
     float: left;
-    width: 750px;
+    width: 770px;
     
 }
 
@@ -259,12 +259,20 @@ body {
     'Open Sans', sans-serif;
 }
 
-#dlreset {
+#rightbox #dlreset {
     width: 750px;
-}
-#reset_original {
     position: relative;
     float: right;
+    /* display: grid; */
+    
+}
+#dlreset #reset_original {
+    position: relative;
+    float: right;
+}
+#dlreset #downloadCurSel {
+    position: relative;
+    float: left;
 }
 
 #saveVenn {
@@ -279,7 +287,7 @@ body {
     cursor: pointer;
     text-decoration: underline;
     -o-transition: .1s;
-    -ms-transition; .1s;
+    -ms-transition: .1s;
     -moz-transition:.1s;
     -webkit-transition: .1s;
     transition: .1s;

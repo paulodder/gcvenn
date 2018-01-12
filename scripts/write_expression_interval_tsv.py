@@ -29,7 +29,7 @@ def run(*args):
             expr_dic[expr_tcgan_interv] = [[], [], []]
         expr_dic[expr_tcgan_interv][0].append(gene_id)
     
-    with open('genes/static/js/'+filedest, 'w') as f:
+    with open('genes/static/js/' + filedest, 'w') as f:
         f.write('expr_val\tids_jan\tids_gte\tids_tcgan\n')
         for interv in sorted(expr_dic.keys()):
             f.write("%s\t%s\t%s\t%s\n" % (interv,

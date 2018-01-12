@@ -5,10 +5,12 @@ from genes.models import *
 
 from collections import Counter
 import numpy as np
-
+IV = 0.2
 def run(*args):
-    output_file = args[0]
-    interv = round(float(args[1]), 2)
+    global IV
+    # output_file = args[0]
+    # interv = round(float(args[1]), 2)
+    interv = IV
     all_genes = Gene.objects.all()
     jan_expr_values = Counter([round((gene.Jan_expr//interv)*interv, 2) for
                                gene in all_genes])
@@ -18,7 +20,7 @@ def run(*args):
                                gene in all_genes])
 
     
-    with open(output_file, 'w') as outfile:
+    with open('genes/static/js/expr_02.tsv', 'w') as outfile:
         outfile.write("x_value\texpr_jan\texpr_gte\texpr_tcgan\n")
         for unrounded_x in np.arange(0.0, 13+interv, interv):
             x = round(unrounded_x, 2)
