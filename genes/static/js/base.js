@@ -525,14 +525,18 @@ d3.tsv('static/js/expr_02.tsv', type, function(error, data_chart) {
 	    document.getElementById('input_min_jan').value = format(min_x);
 	    document.getElementById('input_max_jan').value = format(max_x);
 	    
-
-	    // Update number of genes selected
-	    d3.select("#nofgenes_jan").text(function() {
-		var nofgenes = (F_jan_max[format(max_x)]
-				- F_jan_max[format(min_x)]);
-		d3.select("#percgenes_jan").text( ' (' + format(nofgenes/PERC_DIV) + '%)');
-		return nofgenes;
-	    })
+	    nofgenes = (F_jan_max[format(max_x)]
+			- F_jan_max[format(min_x)])
+	    if (!isNaN(nofgenes)) {
+		// Update number of genes selected
+		d3.select("#nofgenes_jan").text(function() {
+		    d3.select("#percgenes_jan").text( ' (' +
+						      format(nofgenes/
+							     PERC_DIV)
+						      + '%)');
+		    return nofgenes;
+		})};
+	       
 	    update_brush_handles_jan();
 	    
 	    
@@ -700,7 +704,6 @@ d3.tsv('static/js/expr_02.tsv', type, function(error, data_chart) {
 	.attr("dy", "1em")
 	.text("Number of genes")
 
-
     // Add x-axis and ticks
     chart_gte.append("g")
 	.attr("class", "x axis")
@@ -825,12 +828,24 @@ d3.tsv('static/js/expr_02.tsv', type, function(error, data_chart) {
 	    document.getElementById('input_min_gte').value = format(min_x);
 	    document.getElementById('input_max_gte').value = format(max_x);
 	    
-	    d3.select("#nofgenes_gte").text(function() {
-		var nofgenes = (F_gte_max[format(max_x)]
-				- F_gte_max[format(min_x)]);
-		d3.select("#percgenes_gte").text( ' (' + format(nofgenes/PERC_DIV) + '%)');
-		return nofgenes;
-	    })
+	    nofgenes = (F_gte_max[format(max_x)]
+			- F_gte_max[format(min_x)])
+	    if (!isNaN(nofgenes)) {
+		// Update number of genes selected
+		d3.select("#nofgenes_gte").text(function() {
+		    d3.select("#percgenes_gte").text( ' (' +
+						      format(nofgenes/
+							     PERC_DIV)
+						      + '%)');
+		    return nofgenes;
+		})};
+
+	    // d3.select("#nofgenes_gte").text(function() {
+	    // 	var nofgenes = (F_gte_max[format(max_x)]
+	    // 			- F_gte_max[format(min_x)]);
+	    // 	d3.select("#percgenes_gte").text( ' (' + format(nofgenes/PERC_DIV) + '%)');
+	    // 	return nofgenes;
+	    // })
 	    update_brush_handles_gte();
 
 	    
@@ -1133,12 +1148,17 @@ d3.tsv('static/js/expr_02.tsv', type, function(error, data_chart) {
 	    document.getElementById('input_max_tcgan').value = format(max_x);
 	    
 	    // Update number of genes selected
-	    d3.select("#nofgenes_tcgan").text(function() {
-		var nofgenes = (F_tcgan_max[format(max_x)]
-				- F_tcgan_max[format(min_x)]);
-		d3.select("#percgenes_tcgan").text( ' (' + format(nofgenes/PERC_DIV) + '%)');
-		return nofgenes;
-	    })
+	    nofgenes = (F_tcgan_max[format(max_x)]
+			- F_tcgan_max[format(min_x)])
+	    if (!isNaN(nofgenes)) {
+		// Update number of genes selected
+		d3.select("#nofgenes_tcgan").text(function() {
+		    d3.select("#percgenes_tcgan").text( ' (' +
+						      format(nofgenes/
+							     PERC_DIV)
+						      + '%)');
+		    return nofgenes;
+		})};
 	    
 	    
 	    update_brush_handles_tcgan();
