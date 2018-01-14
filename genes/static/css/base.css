@@ -1,5 +1,4 @@
 footer {
-    /* position: absolute; */
     margin-bottom: 0;
     width: 100%;
     heigth: 60px;
@@ -12,9 +11,6 @@ footer {
 }
 
 
-/* body { */
-/*     heigth: 0px; */
-/* } */
 body {
     overflow: auto;
 }
@@ -23,7 +19,7 @@ body {
     transform-origin: 0 0;
     width: 1800px;
     height: auto;
-    /* overflow-y: auto; */
+
 }
 #leftbox {
     float: left;
@@ -72,45 +68,8 @@ rect.selection {
 rect.handle.handle-custom--w {
     opacity: 0.5;
 }
-/* g.tick text { */
-/*     transform: rotate(-90); */
-/* } */
-
-/* CT genes Wang et al._Current selectionBruggeman et al. { */
-/*     opacity: 1; */
-/* } */
-/* CT genes Wang et al. { */
-/*     opacity: 1; */
-/*     fill: steelblue; */
-/* } */
-/* .venn-area { */
-/*     opacity: 1; */
-/* } */
-
-/* JAN:	#D5CA49 */
-/* GTE #78C160 */
-/* GCGAN #B45A5A */
-
-
-
-/* path { */
-/*     stroke: steelblue; */
-/*     stroke-width: 2; */
-/*     fill: none; */
-/* } */
-/* A: bruggeman: */
-/* B: CT db
-C: Wang
-A: #EB1D23 
-B: #334FA3
-C: #3BADE3
-AB: #723F78
-BC: #366FB8
-CD 
-*/
      
        
-/* Ticks */
 .axis text {
     font-size: 10px;
 
@@ -142,8 +101,6 @@ CD
     stroke: grey;
     opacity: 0.1;
     stroke-width: 0.5;
-    /* /\* stroke-width: 1; *\/ */
-    /* opacity: 0.5; */
 }
 
 .axis path {
@@ -170,7 +127,6 @@ path line {
 }
 #area_jan {
     fill: #D3CC44;
-    /* background-color: steelblue; */
     stroke-width: 0;
  
 }
@@ -197,16 +153,12 @@ path line {
     fill:  #B45A5A;
     stroke-width: 0;
 }
-/* #rightbox div { */
-/*     float: left; */
-/* } */
 
 #rightbox .chart_div {
     border: 1px outset;
     border-radius: 10px;
     float: right;
     display: grid;
-    /* grid-grap: 10px; */
 }
 
 .chart_status {
@@ -263,8 +215,6 @@ body {
     width: 750px;
     position: relative;
     float: right;
-    /* display: grid; */
-    
 }
 #dlreset #reset_original {
     position: relative;
@@ -294,9 +244,6 @@ body {
 
     
 }
-/* .clickables:hover button { */
-/*     color: black; */
-/* } */
 
 
 button:hover {
@@ -322,3 +269,4 @@ button:hover {
 #chartwrapper {
     width: 770px;
 }
+
