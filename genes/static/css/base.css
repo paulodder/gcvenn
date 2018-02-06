@@ -165,12 +165,10 @@ path line {
     margin-top: -30px;
     margin-left: 50px;
 }
-.chart_status text {
-}
 
-.chart_status p {
+.chart_status p{
     float: left;
-    font-size: 11pt;
+    font-size: 10pt;
 
 }
 
@@ -208,8 +206,9 @@ path line {
   opacity: 0;
 }
 body {
-    'Open Sans', sans-serif;
+    font-family: 'Open Sans'; /* ,  'Sans-serif'; */
 }
+
 
 #rightbox #dlreset {
     width: 750px;

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+
 <body>
   <div id="bodywrapper">
     <div id="main">
@@ -10,7 +11,7 @@
 	</p>
 	<p>
 	  However, identification of GC-genes (or cancer/testis (CT) genes) has been based on gene expression in whole testicular tissue, rather than germ cells specifically. Most likely, the relative lack of success of CT-gene based therapies can be attributed to these criteria.</p>
-	This website is a supplement to our paper entitled "<a href="https://www.biorxiv.org/content/early/2017/09/28/195305" id="intextlink" target="_blank">Massive expression of germ cell specific genes is a hallmark of cancer and a potential target for novel treatment development</a>" (currently under review). Because the cut-offs we chose for the inclusion of GC-genes are arbitrary within reason, we developed this tool to allow researchers to visualise the effects of setting different cut-off criteria.
+	This website is a supplement to our paper entitled "<a href="https://www.biorxiv.org/content/early/2017/09/28/195305" id="intextlink" target="_blank">Massive expression of germ cell specific genes is a hallmark of cancer and a potential target for novel treatment development</a>". Because the cut-offs we chose for the inclusion of GC-genes are arbitrary within reason, we developed this tool to allow researchers to visualise the effects of setting different cut-off criteria.
 </p>
 <p>
   We here integrated the interaction between figure 2 (Venn diagram) and supplementary figure 1 (expression distributions per dataset) into a web-based application.
@@ -94,8 +95,9 @@
     var expr_tsv_path = "{% static 'js/expr_02.tsv' %}";
   </script>
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  
+  <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> -->
   <link type="text/css" href="{% static "css/base.css" %}" rel="stylesheet">
   <script type="text/javascript" src="https://d3js.org/d3.v4.js"></script>
   
