@@ -625,8 +625,17 @@ class histo {
                           current_selection = current_selection.concat(this_x2genes[x_val])
                           // Array.prototype.push.apply(current_selection, this_x2nofgenes[x_val]);
                       })
-                ACTIVE_ID_NAME2CURRENT_SELECTION[this_id_name] = new Set(current_selection)
-                // this_current_selection = current_selection;
+                var current_selection_set = new Set(current_selection)
+                ACTIVE_ID_NAME2CURRENT_SELECTION[this_id_name] = current_selection_set
+                var nofgenes = current_selection_set.size;
+                    d3.select(`#nofgenes_${this_id_name}`).text(function() {
+                        d3.select(`#percgenes_${this_id_name}`).text(' (' +
+                                                                     format(nofgenes /
+                                                                            this_PERC_DIV) +
+                                                                     '%)')
+                        return nofgenes
+
+                    })
             })
 
         var this_brush = this.brush
