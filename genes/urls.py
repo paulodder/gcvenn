@@ -4,14 +4,11 @@ from genes.views import *
 
 
 urlpatterns = [
-    path('', base, name='base'),
-
-# AJAX REQUESTS
+    path("", base, name="base"),
+    # AJAX REQUESTS
     # print('not yet'),
-    path('requests/', filter_gene_indices, name='filter_gene_indices'),
+    path("requests/", filter_gene_indices, name="filter_gene_indices"),
     # print('
-    path('download/', generate_csv, name='generate_csv'),
-
-    
+    path("download/", generate_csv, name="generate_csv"),
+    path("api/", return_data, name="return_data"),
 ]
-

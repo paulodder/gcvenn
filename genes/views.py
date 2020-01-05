@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse, StreamingHttpResponse
 from django.template import loader
-
+import numpy as np
 from genes.models import *
-
+import random
+import random
 import json
 import csv
 from collections import Counter
@@ -83,6 +84,37 @@ def filter_gene_indices(request):
             ]
         )
     )
+
+
+def return_data(request):
+    mean1 = random.random() * 12
+    mean2 = random.random() * 12
+    out = dict(
+        (str(-1 * x), y)
+        for x, y in enumerate(
+            [
+                {
+                    "expr": max(
+                        0,
+                        min(
+                            [
+                                12.99,
+                                np.random.normal(
+                                    mean1 if random.random() < 0.3 else mean2,
+                                    0.5,
+                                ),
+                            ]
+                        ),
+                    )
+                }
+                for _ in range(30000)
+            ]
+        )
+    )
+    return HttpResponse(json.dumps(out))
+    # with open("../csv_files/bruggeman_genes_full_data_neww.csv") as f:
+    #     r = csv.reader(f)
+    #     genes = {g[0]: random.random(0, 14) for g in f}
 
 
 def generate_csv(request):

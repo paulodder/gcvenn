@@ -12,29 +12,40 @@
 
       </div>
       <div id="chartwrapper">
-        <div id="div_chart_tcgan" class="chart_div">
-          <svg class="chart" id="expr_tcgan"></svg>
-          <div class="chart_status">
-            <p>Selected
-              <span class="nofgenes" id="nofgenes_tcgan">13468</span>
-              <span class="percgenes" id="percgenes_tcgan">(89.14%)</span>
+        <!-- <div id="div_chart_checking" class="chart_div">
+             <svg class="chart" id="expr_checking"></svg>
+             <div class="chart_status">
+             <p>Selected
+             <span class="nofgenes" id="nofgenes_checking">13468</span>
+             <span class="percgenes" id="percgenes_checking">(89.14%)</span>
 
-              genes whose max. expression in tumors is above <input class="input_range_tcgan" id="input_min_tcgan" type="number" step="0.01" min="0" max="13">&nbsp;</p><p id="max_range_max_tcgan">and below <input class="input_range_tcgan" id="input_max_tcgan" type="number" step="0.01" min="0" max="13"></p>
-          </div>
+             genes whose max. expression in tumors is above <input class="input_range_checking" id="input_min_checking" type="number" step="0.01" min="0" max="13">&nbsp;</p><p id="max_range_max_checking">and below <input class="input_range_checking" id="input_max_checking" type="number" step="0.01" min="0" max="13"></p>
+             </div>
 
-        </div>
+             </div>
+             <div id="div_chart_tcgan" class="chart_div">
+             <svg class="chart" id="expr_tcgan"></svg>
+             <div class="chart_status">
+             <p>Selected
+             <span class="nofgenes" id="nofgenes_tcgan">13468</span>
+             <span class="percgenes" id="percgenes_tcgan">(89.14%)</span>
 
-        <div id="div_chart_gte" class="chart_div">
-          <svg class="chart" id="expr_gte"></svg>
-          <div class="chart_status">
-            <p>Selected
-              <span class="nofgenes" id="nofgenes_gte">13468</span>
-              <span class="percgenes" id="percgenes_gte">(89.14%)</span>
+             genes whose max. expression in tumors is above <input class="input_range_tcgan" id="input_min_tcgan" type="number" step="0.01" min="0" max="13">&nbsp;</p><p id="max_range_max_tcgan">and below <input class="input_range_tcgan" id="input_max_tcgan" type="number" step="0.01" min="0" max="13"></p>
+             </div>
 
-              genes whose max. expression in tumors is above <input class="input_range_gte" id="input_min_gte" type="number" step="0.01" min="0" max="13">&nbsp;</p><p id="max_range_max_gte">and below <input class="input_range_gte" id="input_max_gte" type="number" step="0.01" min="0" max="13"></p>
-          </div>
+             </div>
 
-        </div>
+             <div id="div_chart_gte" class="chart_div">
+             <svg class="chart" id="expr_gte"></svg>
+             <div class="chart_status">
+             <p>Selected
+             <span class="nofgenes" id="nofgenes_gte">13468</span>
+             <span class="percgenes" id="percgenes_gte">(89.14%)</span>
+
+             genes whose max. expression in tumors is above <input class="input_range_gte" id="input_min_gte" type="number" step="0.01" min="0" max="13">&nbsp;</p><p id="max_range_max_gte">and below <input class="input_range_gte" id="input_max_gte" type="number" step="0.01" min="0" max="13"></p>
+             </div>
+
+             </div> -->
 
 
 
@@ -42,6 +53,13 @@
 
 
 
+    </div>
+    <div id="vennwrapper">
+      <div id="venn" class="clickables">
+        <!-- <button id="saveVenn">Export as png</button> -->
+      </div>
+      <div id="venndisclaimer">
+      </div>
     </div>
 
     <footer>
@@ -51,7 +69,6 @@
 </body>
 <head>
   <!-- Load venn library DONT FORGET TO INCLUDE REFERENCE -->
-
   <script> <!-- Access path here once to load tsv file in other scripts -->
    var expr_tsv_path = "{% static 'js/expr_02.tsv' %}";
   </script>
