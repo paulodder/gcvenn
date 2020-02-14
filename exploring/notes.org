@@ -1,0 +1,27 @@
+* tpm vs rpkm vs fpkm
+https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/
+
+* GTEx settings
+Can be found [[https://gtexportal.org/home/documentationPage][here]].
+V8\\
+GENCODE v26\\
+Alignment to the human reference genome GRCh38/hg38 was performed using STAR
+v2.5.3a, based on the GENCODE v26 annotation.
+
+
+* TCGA settings
+[[https://docs.gdc.cancer.gov/Data/Bioinformatics_Pipelines/Expression_mRNA_Pipeline/][overview of pipeline for rna-seq]]
+
+* Sample UUIDS to tagname
+kijk hier naar:
+https://rdrr.io/bioc/TCGAutils/man/ID-translation.html
+
+https://docs.gdc.cancer.gov/Encyclopedia/pages/TCGA_Barcode/
+fff72b21-e71c-4858-ab4e-1f6c79e58e79
+
+https://tcga-data.nci.nih.gov/uuid/uuidws/mapping/xml/uuid/fff72b21-e71c-4858-ab4e-1f6c79e58e79
+
+
+26e791c1-3713-4993-b1b6-f28836f28179
+67c28a4b-ecb1-461b-le 846e-e797697c34bc.rna_seq.star_gene_counts.tsv.gz
+d94510399270dff7b3dfed7b31b09664 407919 released

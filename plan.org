@@ -1,0 +1,100 @@
+#+BIND: org-export-use-babel nil
+#+TITLE: Plan
+#+AUTHOR: Paul Lodder
+#+EMAIL: <paul_lodder@live.nl>
+#+DATE: February 14, 2020
+#+LaTeX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage[margin=0.8in]{geometry}
+#+LATEX_HEADER_EXTRA:  \usepackage{mdframed}
+#+LATEX_HEADER_EXTRA: \BeforeBeginEnvironment{minted}{\begin{mdframed}}
+#+LATEX_HEADER_EXTRA: \AfterEndEnvironment{minted}{\end{mdframed}}
+#+MACRO: NEWLINE @@latex:\\@@ @@html:<br>@@
+#+PROPERTY: header-args :exports both :session insurer :cache :results value
+#+OPTIONS: ^:nil
+#+LATEX_COMPILER: pdflatexorg-mode restarted
+
+File with notes from meeting.
+
+* Meeting 0
+Original email from philip
+#+BEGIN_EXAMPLE
+Hi Paul,
+
+Ik heb die correspondentie met Jan gelezen en ik stel voor dat wij het volgende
+bespreken morgen in orde om de meeting efficient te laten lopen:
+1. Duidelijk stellen van de doelen, wat willen wij dat de webapp precies doet?
+   High-level overview om een goed idee te hebben van wat de webapp doet en
+   niet doet en zou moeten doen in de toekomst.
+2. Input/Output data wat willen we erin stoppen en wat moet eruit?
+3. Data bronnen:
+welke? bewerkingen? pipelines?
+4. Methodes: wat wil je met de data doen?
+batch effects TDA andere transformaties?
+
+en daarna:
+
+hoe wil je het implementeren: client side computations, welke, etc file formats
+bespreken andere architectural consideratiosn
+
+5. Huidige progressie en duidelijke doelen stellen voor komende maand +
+   mogelijk plan maken.
+
+Is dat een goed plan?
+
+Exciting allemaal, tot morgen! Ik hou je op de hoogte van mijn ETA.
+
+Groeten,
+
+Philip
+#+END_EXAMPLE
+
+** What?
+Provides
+Let the user pick variable any number/combination of tissues, for which we show
+a expression.
+
+To precompute:\\
+For each tissue type, min/max/mean/ per geen
+
+for a particular tissue (which is derived from raw files)
+=gene_expression_for_<tissue>=
+| Gene    | min | max | avg |
+| ENSXXXX | 0.2 | 0.8 | 0.5 |
+| ENSXXXY | 0.3 | 1.2 | 0.4 |
+
+If user selects multiple tissues, backend computes desired measure of combined
+tissues based.
+
+e.g. take the min of the min.
+
+User can select ranges of expression for each histogram, after which the venn
+diagram is updated.
+
+Histogram is the distribution of gene expression values.
+
+try transformation
+** I/O
+Input: =gene_expression_for_<tissue>=
+User then selects combination of, we compute some measure.\\
+Output: histogram per selection, interactive venn diagram, option to download
+current selection
+
+** Data
+GCT reads?
+** Justification
+*** Pipeline
+    We could apply the pipeline and check if our results are in line with what
+    would happen if we don't apply the pipeline for every new selection
+*** Case studies
+    E.g. person with X-cancer and Y-tissue, and we check their expression data
+    and see if it matches our results.
+
+* Issues
+** Gencode version compatibility
+Possibly, the difference does not give any conflicts for the genes in GTEx and
+TCGA.\\
+TODO: check if this case.
+
+** STAR
+   STAR is een alignment programma, die de ruwe reads op de juiste plek in een
+   genoom (of set aan RNA transcripten) plaatst.

@@ -1,0 +1,11 @@
+* .env
+Fill out values for =DATA_DIR= and =SRC_DIR= in =.env=, the values specified in
+this file will be used by the script =get_data.sh=
+
+- DATA_DIR :: full path to directory where data will be stored
+- SRC_DIR :: full path to directory where =gdc_client= will be installed
+
+* UUID mapper
+Set up https://code.google.com/archive/p/tcgauuid/
+* get_data.sh
+Before running =get_data.sh=, make sure you are in your virtualenv for this project
