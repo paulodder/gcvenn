@@ -1,0 +1,20 @@
+#+BIND: org-export-use-babel nil
+#+TITLE: Narrative
+#+DATE: February 14, 2020
+#+LATEX_CLASS: assignment
+#+LaTeX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage[margin=0.8in]{geometry}
+#+LATEX_HEADER_EXTRA:  \usepackage{mdframed}
+#+LATEX_HEADER_EXTRA: \BeforeBeginEnvironment{minted}{\begin{mdframed}}
+#+LATEX_HEADER_EXTRA: \AfterEndEnvironment{minted}{\end{mdframed}}
+#+MACRO: NEWLINE @@latex:\\@@ @@html:<br>@@
+#+PROPERTY: header-args :exports both :session insurer :cache :results value
+#+OPTIONS: ^:nil
+#+LATEX_COMPILER: pdflatexorg-mode restarted
+
+* Data downloading
+
+** GTEx data
+In file:../scripts/get_gtex_data.sh
+** TCGAN data
+Requires [[https://github.com/NCI-GDC/gdc-client][gdc-client]]. Haven't got it to work yet.
