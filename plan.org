@@ -88,13 +88,3 @@ GCT reads?
 *** Case studies
     E.g. person with X-cancer and Y-tissue, and we check their expression data
     and see if it matches our results.
-
-* Issues
-** Gencode version compatibility
-Possibly, the difference does not give any conflicts for the genes in GTEx and
-TCGA.\\
-TODO: check if this case.
-
-** STAR
-   STAR is een alignment programma, die de ruwe reads op de juiste plek in een
-   genoom (of set aan RNA transcripten) plaatst.
