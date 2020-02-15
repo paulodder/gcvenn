@@ -1,5 +1,5 @@
 #+BIND: org-export-use-babel nil
-#+TITLE: Plan
+#+TITLE: Notes
 #+AUTHOR: Paul Lodder
 #+EMAIL: <paul_lodder@live.nl>
 #+DATE: February 14, 2020
@@ -13,9 +13,11 @@
 #+OPTIONS: ^:nil
 #+LATEX_COMPILER: pdflatexorg-mode restarted
 
-File with notes from meeting.
 
-* Meeting 0
+* Meeting notes
+
+Meeting 14/02/2020
+
 Original email from philip
 #+BEGIN_EXAMPLE
 Hi Paul,
@@ -49,42 +51,46 @@ Philip
 #+END_EXAMPLE
 
 ** What?
-The objective is to let the user select any combination of tissues, and
-Let the user pick any number/combination of tissues, for which we show
-a expression.
+   The objective is to let the user select any combination of tissues, and
+   Let the user pick any number/combination of tissues, for which we show
+   a expression.
 
-To precompute:\\
-For each tissue type, min/max/mean/ per geen
+   To precompute:\\
+   For each tissue type, min/max/mean/ per geen
 
-for a particular tissue (which is derived from raw files)
-=gene_expression_for_<tissue>=
-| Gene    | min | max | avg |
-| ENSXXXX | 0.2 | 0.8 | 0.5 |
-| ENSXXXY | 0.3 | 1.2 | 0.4 |
+   for a particular tissue (which is derived from raw files)
+   =gene_expression_for_<tissue>=
+   | Gene    | min | max | avg |
+   | ENSXXXX | 0.2 | 0.8 | 0.5 |
+   | ENSXXXY | 0.3 | 1.2 | 0.4 |
 
-If user selects multiple tissues, backend computes desired measure of combined
-tissues based.
+   If user selects multiple tissues, backend computes desired measure of combined
+   tissues based.
 
-e.g. take the min of the min.
+   e.g. take the min of the min.
 
-User can select ranges of expression for each histogram, after which the venn
-diagram is updated.
+   User can select ranges of expression for each histogram, after which the Venn
+   diagram is updated.
 
-Histogram is the distribution of gene expression values.
+   Histogram is the distribution of gene expression values.
 
-try transformation
-** data: I/O
-Input:
-+ Data:  =gene_expression_for_<tissue>=
-+ User:  combination of tissue and provenance, and choice of measure to be computed (e.g. min/max/avg).
-Output:
-+ histogram per selection
-+ interactive Venn diagram
-+ option to download
-current selection
+   try transformation
+** Data: I/O
+   Input:
+   + Data:  =gene_expression_for_<tissue>=
+   + User:  combination of tissue and provenance, and choice of measure to be computed (e.g. min/max/avg).
+   Output:
+   + histogram per selection
+   + interactive Venn diagram
+   + option to download
+   current selection
 
-** Data
-GCT reads?
+** Data sources
+   Data needed:
+   + TGCA data
+   + GTEx data
+   + other?
+
 ** Justification
 *** Limitations of the methodology of Bruggeman et al.
     The crucial limitation of Bruggeman et al.'s paper is that they consider all
@@ -105,3 +111,51 @@ GCT reads?
 
     E.g. for every person with X-cancer and Y-tissue, and we check their expression data
     and see if it matches our results.
+* Issues
+** Gencode version compatibility
+Possibly, the difference does not give any conflicts for the genes in GTEx and
+TCGA.
+TODO: check if this case.
+
+** STAR
+   Inspect if tcga vs. gtex different STAR versions are relevant to our purposes.
+
+* tpm vs rpkm vs fpkm
+  https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/
+
+* GTEx settings
+  Can be found [[https://gtexportal.org/home/documentationPage][here]].
+  V8
+  GENCODE v26
+  Alignment to the human reference genome GRCh38/hg38 was performed using STAR
+  v2.5.3a, based on the GENCODE v26 annotation.
+
+* TCGA settings
+  [[https://docs.gdc.cancer.gov/Data/Bioinformatics_Pipelines/Expression_mRNA_Pipeline/][overview of pipeline for rna-seq]]
+
+* Sample UUIDS to tagname
+  kijk hier naar:
+  https://rdrr.io/bioc/TCGAutils/man/ID-translation.html
+
+  https://docs.gdc.cancer.gov/Encyclopedia/pages/TCGA_Barcode/
+  fff72b21-e71c-4858-ab4e-1f6c79e58e79
+
+  https://tcga-data.nci.nih.gov/uuid/uuidws/mapping/xml/uuid/fff72b21-e71c-4858-ab4e-1f6c79e58e79
+
+
+  26e791c1-3713-4993-b1b6-f28836f28179
+  67c28a4b-ecb1-461b-le 846e-e797697c34bc.rna_seq.star_gene_counts.tsv.gz
+  d94510399270dff7b3dfed7b31b09664 407919 released
+
+* .env
+Fill out values for =DATA_DIR= and =SRC_DIR= in =.env=, the values specified in
+this file will be used by the script =get_data.sh= and others.
+
+- DATA_DIR :: full path to directory where data will be stored
+- SRC_DIR :: full path to directory where =gdc_client= will be installed
+
+* UUID mapper
+Set up https://code.google.com/archive/p/tcgauuid/
+
+* get_data.sh
+  Before running =get_data.sh=, make sure you are in your virtualenv for this project
