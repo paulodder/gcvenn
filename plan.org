@@ -49,8 +49,8 @@ Philip
 #+END_EXAMPLE
 
 ** What?
-Provides
-Let the user pick variable any number/combination of tissues, for which we show
+The objective is to let the user select any combination of tissues, and
+Let the user pick any number/combination of tissues, for which we show
 a expression.
 
 To precompute:\\
@@ -73,18 +73,35 @@ diagram is updated.
 Histogram is the distribution of gene expression values.
 
 try transformation
-** I/O
-Input: =gene_expression_for_<tissue>=
-User then selects combination of, we compute some measure.\\
-Output: histogram per selection, interactive venn diagram, option to download
+** data: I/O
+Input:
++ Data:  =gene_expression_for_<tissue>=
++ User:  combination of tissue and provenance, and choice of measure to be computed (e.g. min/max/avg).
+Output:
++ histogram per selection
++ interactive Venn diagram
++ option to download
 current selection
 
 ** Data
 GCT reads?
 ** Justification
-*** Pipeline
-    We could apply the pipeline and check if our results are in line with what
-    would happen if we don't apply the pipeline for every new selection
-*** Case studies
-    E.g. person with X-cancer and Y-tissue, and we check their expression data
+*** Limitations of the methodology of Bruggeman et al.
+    The crucial limitation of Bruggeman et al.'s paper is that they consider all
+    GC genes instead of a specific set of genes. This has as consequence that
+    only differences between cancer cells and normal tissue is considered. This
+    tool will make the encounter of such caveats less likely by making clear to
+    the user what is being compared through a visualization tool.
+
+*** Pipeline requirements for comparing GTEx and TGCA data
+    In order to justify why we want to compare GTEx and TGCA data without
+    extensive compute power is that we think that since we care only about
+    extreme values (i.e. very high or very low gene expression), we do not need
+    to apply a pipeline that would be too intensive on the server side.
+
+    We could apply the pipeline and check if our results (i.e. transformed data
+    by the pipeline) are in line with what would happen if we don't apply the
+    pipeline for every new selection.
+
+    E.g. for every person with X-cancer and Y-tissue, and we check their expression data
     and see if it matches our results.
