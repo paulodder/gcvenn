@@ -1,6 +1,6 @@
 cd $SRC_DIR
 git clone https://github.com/NCI-GDC/gdc-client
-cd bin
+cd gdc-client/bin
 pip install virtualenv
 virtualenv venv
 ./package
