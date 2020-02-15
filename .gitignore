@@ -1,7 +1,9 @@
-This is a gitignore file for the gcvenn project created using gitignore.io
+# This is a gitignore file for the gcvenn project created using gitignore.io
 
-Add .env to .gitignore since this file is user-specific
-.env
+# Add .env to .gitignore since this file is user-specific
+*.env
+# Add /data folder to ignored folders
+/data
 
 ### Django ###
 *.log
@@ -501,7 +503,7 @@ DocProject/Help/Html2
 DocProject/Help/html
 
 # Click-Once directory
-publish/
+  publish/
 
 # Publish Web Output
 *.[Pp]ublish.xml
@@ -643,7 +645,8 @@ paket-files/
 # Tabs Studio
 *.tss
 
-# Telerik's JustMock configuration file
+# Telerik'
+s JustMock configuration file
 *.jmconfig
 
 # BizTalk build output
