@@ -1,0 +1,10 @@
+* Getting started
+** .env
+Set values in =.env= files accordingly
+** requirements
+#+BEGIN_EXAMPLE sh
+pip install -r requirements.txt
+#+END_EXAMPLE
+** Data
+[[file:scripts/get_tcga_data.sh][get_tcga_data.sh]] downloads the required tcga data.
+[[file:scripts/get_gtex_data.sh][get_gtex_data.sh]] downloads the required gtex data.
