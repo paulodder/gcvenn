@@ -5,13 +5,13 @@
   <div id="bodywrapper">
     <div id="main">
       <div id="leftbox">
-	<h3>Interactive Venn diagram for genes expressed in germ cells and cancer</h3>
-	<p>
-	  Germ cell / Cancer (GC) genes or antigens entail a subset of genes highly expressed in cancerous tissues, but whose expression is normally restricted to germ cells. Under physiological conditions these genes are solely expressed in immunologically privileged sites, preventing development of tolerance by the immune system. In combination with limited side effects when targeted, these features render GC-genes as ideal therapeutic targets in cancer therapy.
-	</p>
-	<p>
-	  However, identification of GC-genes (or cancer/testis (CT) genes) has been based on gene expression in whole testicular tissue, rather than germ cells specifically. Most likely, the relative lack of success of CT-gene based therapies can be attributed to these criteria.</p>
-	This website is a supplement to our paper entitled "<a href="https://www.biorxiv.org/content/early/2017/09/28/195305" id="intextlink" target="_blank">Massive expression of germ cell specific genes is a hallmark of cancer and a potential target for novel treatment development</a>". Because the cut-offs we chose for the inclusion of GC-genes are arbitrary within reason, we developed this tool to allow researchers to visualise the effects of setting different cut-off criteria.
+  <h3>Interactive Venn diagram for genes expressed in germ cells and cancer</h3>
+  <p>
+    Germ cell / Cancer (GC) genes or antigens entail a subset of genes highly expressed in cancerous tissues, but whose expression is normally restricted to germ cells. Under physiological conditions these genes are solely expressed in immunologically privileged sites, preventing development of tolerance by the immune system. In combination with limited side effects when targeted, these features render GC-genes as ideal therapeutic targets in cancer therapy.
+  </p>
+  <p>
+    However, identification of GC-genes (or cancer/testis (CT) genes) has been based on gene expression in whole testicular tissue, rather than germ cells specifically. Most likely, the relative lack of success of CT-gene based therapies can be attributed to these criteria.</p>
+  This website is a supplement to our paper entitled "<a href="https://www.biorxiv.org/content/early/2017/09/28/195305" id="intextlink" target="_blank">Massive expression of germ cell specific genes is a hallmark of cancer and a potential target for novel treatment development</a>". Because the cut-offs we chose for the inclusion of GC-genes are arbitrary within reason, we developed this tool to allow researchers to visualise the effects of setting different cut-off criteria.
 </p>
 <p>
   We here integrated the interaction between figure 2 (Venn diagram) and supplementary figure 1 (expression distributions per dataset) into a web-based application.
@@ -24,7 +24,7 @@
     <p>
     Disclaimer: The actual overlap between genes may be larger than visualized here because gene names are subject to change, and different names for the same gene may have been used.</p>
   </div>
-</div>  
+</div>
 </div>
 
 
@@ -32,11 +32,11 @@
 
 
 <div id="rightbox">
-  
+
 <div class="clickables" id="dlreset">
   <button id="reset_original">Reset default selection criteria</button>
   <button id="downloadCurSel">Download current selection (CSV) </button>
-  
+
 </div>
 <div id="chartwrapper">
 <div id="div_chart_jan" class="chart_div">
@@ -77,7 +77,7 @@
 
 </div>
 </div>
-  
+
 
 
 </div>
@@ -90,36 +90,32 @@
 </body>
 <head>
   <!-- Load venn library DONT FORGET TO INCLUDE REFERENCE -->
-  
+
   <script> <!-- Access path here once to load tsv file in other scripts -->
     var expr_tsv_path = "{% static 'js/expr_02.tsv' %}";
   </script>
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-  
+
   <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> -->
   <link type="text/css" href="{% static "css/base.css" %}" rel="stylesheet">
   <script type="text/javascript" src="https://d3js.org/d3.v4.js"></script>
-  
+
 
   <script type="text/javascript" src="{% static "node_modules/venn.js/venn.js" %}"></script>
   <script type="text/javascript" src="{% static "js/base.js" %}"></script>
 
-  
+  S
   <!-- <\!-- For export to png  purposes -\-> -->
   <script src="https://cdn.rawgit.com/eligrey/canvas-toBlob.js/f1a01896135ab378aa5c0118eadd81da55e698d8/canvas-toBlob.js"></script>
   <script src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js"></script>
 
-  
+
   <!-- local -->
 
   <script type="text/javascript" src="{% static "node_modules/d3/build/d3.js" %}"></script>
   <!-- <script type="text/javascript" src="{% static "node_modules/jquery/dist/jquery.min.js" %}"></script> -->
-  
+
   <!-- <script type="text/javascript" src="{% static "node_modules/venn.js/build/venn.min.js" %}"></script> -->
-  
-</head>
 
-
-
-
+o</head>

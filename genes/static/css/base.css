@@ -8,6 +8,7 @@ footer {
     jan: #D3CC44;
     gte: #76C25B;
     tcgan: #B35A5A;
+    checking: #B35200
 }
 
 
@@ -68,8 +69,8 @@ rect.selection {
 rect.handle.handle-custom--w {
     opacity: 0.5;
 }
-     
-       
+
+
 .axis text {
     font-size: 10px;
 
@@ -90,7 +91,8 @@ rect.handle.handle-custom--w {
     text-decoration-color: #B35A5A;
 }
 
-    
+
+
 .axis line {
     fill: none;
     stroke: grey;
@@ -108,7 +110,7 @@ rect.handle.handle-custom--w {
     stroke: grey;
     stroke: 2;
     shape-rendering: crispEdges;
-    
+
 }
 path line {
     fill: none;
@@ -128,7 +130,7 @@ path line {
 #area_jan {
     fill: #D3CC44;
     stroke-width: 0;
- 
+
 }
 /* GTE GRAPH */
 #line_gte {
@@ -140,7 +142,7 @@ path line {
 #area_gte {
     fill: #78C160;
     stroke-width: 0;
- 
+
 }
 
 #line_tcgan {
@@ -172,20 +174,20 @@ path line {
 
 }
 
-    
+
 #rightbox {
     align: right;
     position: relative;
     float: left;
     width: 770px;
-    
+
 }
 
 #venn  {
 
     border: 1px outset;
     border-radius: 10px;
-}		
+}
 
 #leftbox {
     position: relative;
@@ -241,7 +243,7 @@ body {
     -webkit-transition: .1s;
     transition: .1s;
 
-    
+
 }
 
 
@@ -269,3 +271,20 @@ button:hover {
     width: 770px;
 }
 
+
+
+#line_checking {
+    fill: none;
+    stroke: #B35A5A;
+    stroke-width: 2;
+}
+
+#area_checking {
+    fill:  #B45A5A;
+    stroke-width: 0;
+}
+
+[data-venn-sets=tcgan] {
+    fill: #B45A5A
+
+}
