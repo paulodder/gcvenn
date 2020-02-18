@@ -6,5 +6,5 @@ Set values in =.env= files accordingly
 pip install -r requirements.txt
 #+END_EXAMPLE
 ** Data
-[[file:/tree/scripts/get_tcga_data.sh][get_tcga_data.sh]] downloads the required tcga data.
+[[file:scripts/get_tcga_data.sh][get_tcga_data.sh]] downloads the required tcga data.\\
 [[file:scripts/get_gtex_data.sh][get_gtex_data.sh]] downloads the required gtex data.
