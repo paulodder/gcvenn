@@ -16,6 +16,7 @@
 
 * Meeting notes
 
+** Email
 Meeting 14/02/2020
 
 Original email from philip
@@ -111,6 +112,39 @@ Philip
 
     E.g. for every person with X-cancer and Y-tissue, and we check their expression data
     and see if it matches our results.
+** Pitch for Niko Beerenwinkel
+   DEADLINE: <2020-02-27 Fri>
+*** Objectives
+Build a web-based application allowing for:
++ Exploring the differential expression of sets of genes across tissues
++ Assess the expression of a particular gene across tissues
++ Visualizing the results in a Venn diagram & histograms that show the selected
+  region
++ Design objective of the website is to make it easy to use and visual, which
+  contrasts from the training required for the current tool that achieves a
+  similar function https://hgserver1.amc.nl/cgi-bin/r2/main.cgi.
+
+We want to compare the expression patterns for cancer tissue and normal tissue
++ Challenge: pipeline is difficult, because the experimental protocols are not
+  the same
++ But: we are interested in extreme values, therefore qualitative approaches
+  (taking min/max/avg expression for tissue) is the most relevant.
+
+*** Toolkit
++ Build with nodejs
++ As many client-side computations are possible to avoid server overload
++ Python scripts for data analysis and exploration
++
+*** Relevant literature
+Basically expand the scope of the following paper:
++ https://www.nature.com/articles/s41388-018-0357-2
++ https://hgserver3.amc.nl/gcvenn/
+to other tissues for multiple comparisons and mining genes with high degrees of
+differential expression in cancer and healthy tissue.
+
+This supports researchers. Similar tool with rather complex UI achieves same
+goal and is highly cited, aim is to expand user base and lower entry threshold https://hgserver1.amc.nl/cgi-bin/r2/main.cgi
+
 * Issues
 ** Gencode version compatibility
 Possibly, the difference does not give any conflicts for the genes in GTEx and
@@ -147,15 +181,5 @@ TODO: check if this case.
   67c28a4b-ecb1-461b-le 846e-e797697c34bc.rna_seq.star_gene_counts.tsv.gz
   d94510399270dff7b3dfed7b31b09664 407919 released
 
-* .env
-Fill out values for =DATA_DIR= and =SRC_DIR= in =.env=, the values specified in
-this file will be used by the script =get_data.sh= and others.
-
-- DATA_DIR :: full path to directory where data will be stored
-- SRC_DIR :: full path to directory where =gdc_client= will be installed
-
 * UUID mapper
 Set up https://code.google.com/archive/p/tcgauuid/
-
-* get_data.sh
-  Before running =get_data.sh=, make sure you are in your virtualenv for this project
